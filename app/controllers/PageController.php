@@ -21,6 +21,8 @@ class PageController extends Controller {
         $this->staticPageModel = new StaticPage();
     }
 
+
+
     /**
      * About page
      */
@@ -76,15 +78,16 @@ class PageController extends Controller {
     }
 
     /**
-     * Policies page
+     * Library Policies Page
+     * Displays comprehensive library rules, guidelines, and procedures
      */
     public function policies() {
         try {
-            $pageContent = $this->staticPageModel->getPageBySlug('policies');
+            $pageContent = $this->staticPageModel->getPageBySlug('library-policies');
             
             $data = [
                 'pageTitle' => 'Library Policies - ' . SITE_NAME,
-                'metaDescription' => 'View our library policies, rules, and guidelines.',
+                'metaDescription' => 'Learn about our library policies, borrowing rules, computer usage guidelines, fines, code of conduct, and more.',
                 'content' => $pageContent,
                 'breadcrumbs' => [
                     ['title' => 'Home', 'link' => BASE_URL],
