@@ -61,14 +61,159 @@
     </div>
 </section>
 
-<!-- Placeholder for Library Info Section -->
-<div id="library-info"></div>
+<!-- Library Information Section -->
+<section class="library-info py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Library Information</h2>
+        <div class="row g-4">
+            <!-- Library Hours -->
+            <div class="col-md-4">
+                <div class="card h-100 library-info-card">
+                    <div class="card-body text-center">
+                        <div class="info-icon mb-3">
+                            <i class="bi bi-clock text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Library Hours</h3>
+                        <?php if (isset($libraryInfo['hours'])): ?>
+                            <div class="hours-content">
+                                <?= nl2br(htmlspecialchars($libraryInfo['hours'])) ?>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">Hours information not available</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="col-md-4">
+                <div class="card h-100 library-info-card">
+                    <div class="card-body text-center">
+                        <div class="info-icon mb-3">
+                            <i class="bi bi-geo-alt text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Location</h3>
+                        <?php if (isset($libraryInfo['location']) || isset($libraryInfo['address'])): ?>
+                            <?php if (isset($libraryInfo['location'])): ?>
+                                <p class="mb-2"><?= htmlspecialchars($libraryInfo['location']) ?></p>
+                            <?php endif; ?>
+                            <?php if (isset($libraryInfo['address'])): ?>
+                                <p class="text-muted small">
+                                    <?= nl2br(htmlspecialchars($libraryInfo['address'])) ?>
+                                </p>
+                            <?php endif; ?>
+                            <a href="https://maps.google.com/?q=<?= urlencode($libraryInfo['address'] ?? $libraryInfo['location']) ?>" 
+                               class="btn btn-outline-primary btn-sm mt-2" 
+                               target="_blank">
+                                <i class="bi bi-map"></i> View on Map
+                            </a>
+                        <?php else: ?>
+                            <p class="text-muted">Location information not available</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-md-4">
+                <div class="card h-100 library-info-card">
+                    <div class="card-body text-center">
+                        <div class="info-icon mb-3">
+                            <i class="bi bi-headset text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Contact Us</h3>
+                        <div class="contact-info">
+                            <?php if (isset($libraryInfo['phone'])): ?>
+                                <p class="mb-2">
+                                    <i class="bi bi-telephone-fill me-2"></i>
+                                    <a href="tel:<?= htmlspecialchars($libraryInfo['phone']) ?>" 
+                                       class="text-decoration-none">
+                                        <?= htmlspecialchars($libraryInfo['phone']) ?>
+                                    </a>
+                                </p>
+                            <?php endif; ?>
+                            <?php if (isset($libraryInfo['email'])): ?>
+                                <p class="mb-2">
+                                    <i class="bi bi-envelope-fill me-2"></i>
+                                    <a href="mailto:<?= htmlspecialchars($libraryInfo['email']) ?>" 
+                                       class="text-decoration-none">
+                                        <?= htmlspecialchars($libraryInfo['email']) ?>
+                                    </a>
+                                </p>
+                            <?php endif; ?>
+                            <a href="<?= BASE_URL ?>/contact" class="btn btn-primary mt-3">
+                                <i class="bi bi-chat-text-fill me-2"></i>Send Message
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Placeholder for Quick Links Section -->
 <div id="quick-links"></div>
 
 <!-- Placeholder for Announcements Section -->
 <div id="announcements"></div>
+
+<!-- Add styles for Library Info Section -->
+<style>
+/* Library Info Section Styles */
+.library-info {
+    background-color: var(--light-gray) !important;
+}
+
+.library-info-card {
+    transition: var(--transition-base);
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.library-info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.info-icon {
+    font-size: 2.5rem;
+    height: 80px;
+    width: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+.hours-content {
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+.contact-info a {
+    color: var(--primary);
+}
+
+.contact-info a:hover {
+    color: var(--primary-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .library-info-card {
+        margin-bottom: 1rem;
+    }
+
+    .info-icon {
+        font-size: 2rem;
+        height: 60px;
+        width: 60px;
+        line-height: 60px;
+    }
+}
+</style>
 
 <!-- Add custom styles for the carousel -->
 <style>
