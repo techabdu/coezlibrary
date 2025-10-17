@@ -1,0 +1,27 @@
+# Configuration files
+/config/database.php
+.env
+
+# Uploaded files
+/public/uploads/*
+!/public/uploads/ebooks/.gitkeep
+!/public/uploads/ejournals/.gitkeep
+!/public/uploads/thumbnails/.gitkeep
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+*.log
