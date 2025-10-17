@@ -152,13 +152,110 @@
     </div>
 </section>
 
-<!-- Placeholder for Quick Links Section -->
-<div id="quick-links"></div>
+<!-- Quick Links Section -->
+<section class="quick-links py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Quick Access</h2>
+        <div class="row g-4 justify-content-center">
+            <!-- Databases -->
+            <div class="col-lg-4 col-md-6">
+                <a href="<?= BASE_URL ?>/databases" class="quick-link-card card h-100 text-decoration-none">
+                    <div class="card-body text-center">
+                        <div class="quick-link-icon mb-3">
+                            <i class="bi bi-server"></i>
+                        </div>
+                        <h3 class="card-title h4">Research Databases</h3>
+                        <p class="card-text text-muted">
+                            Access scholarly articles, journals, and research databases
+                        </p>
+                        <div class="quick-link-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- E-Books -->
+            <div class="col-lg-4 col-md-6">
+                <a href="<?= BASE_URL ?>/ebooks" class="quick-link-card card h-100 text-decoration-none">
+                    <div class="card-body text-center">
+                        <div class="quick-link-icon mb-3">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <h3 class="card-title h4">E-Books</h3>
+                        <p class="card-text text-muted">
+                            Browse and download digital books from our collection
+                        </p>
+                        <div class="quick-link-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- E-Journals -->
+            <div class="col-lg-4 col-md-6">
+                <a href="<?= BASE_URL ?>/ejournals" class="quick-link-card card h-100 text-decoration-none">
+                    <div class="card-body text-center">
+                        <div class="quick-link-icon mb-3">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <h3 class="card-title h4">E-Journals</h3>
+                        <p class="card-text text-muted">
+                            Access electronic journals and periodicals
+                        </p>
+                        <div class="quick-link-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- FAQ -->
+            <div class="col-lg-4 col-md-6">
+                <a href="<?= BASE_URL ?>/faq" class="quick-link-card card h-100 text-decoration-none">
+                    <div class="card-body text-center">
+                        <div class="quick-link-icon mb-3">
+                            <i class="bi bi-question-circle"></i>
+                        </div>
+                        <h3 class="card-title h4">FAQ</h3>
+                        <p class="card-text text-muted">
+                            Find answers to commonly asked questions
+                        </p>
+                        <div class="quick-link-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Ask a Librarian -->
+            <div class="col-lg-4 col-md-6">
+                <a href="<?= BASE_URL ?>/contact" class="quick-link-card card h-100 text-decoration-none">
+                    <div class="card-body text-center">
+                        <div class="quick-link-icon mb-3">
+                            <i class="bi bi-chat-dots"></i>
+                        </div>
+                        <h3 class="card-title h4">Ask a Librarian</h3>
+                        <p class="card-text text-muted">
+                            Get help from our library staff
+                        </p>
+                        <div class="quick-link-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Placeholder for Announcements Section -->
 <div id="announcements"></div>
 
-<!-- Add styles for Library Info Section -->
+<!-- Add styles for Library Info and Quick Links Sections -->
+<style>
+/* Library Info Section Styles */
 <style>
 /* Library Info Section Styles */
 .library-info {
@@ -200,7 +297,7 @@
     color: var(--primary-dark);
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments for Library Info */
 @media (max-width: 768px) {
     .library-info-card {
         margin-bottom: 1rem;
@@ -211,6 +308,86 @@
         height: 60px;
         width: 60px;
         line-height: 60px;
+    }
+}
+
+/* Quick Links Section Styles */
+.quick-links {
+    background-color: var(--white);
+}
+
+.quick-link-card {
+    transition: var(--transition-base);
+    border: 1px solid var(--gray-200);
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-link-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg);
+}
+
+.quick-link-icon {
+    font-size: 2rem;
+    height: 80px;
+    width: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    transition: var(--transition-base);
+}
+
+.quick-link-card:hover .quick-link-icon {
+    background-color: var(--primary);
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+.quick-link-card .card-title {
+    color: var(--gray-900);
+    transition: var(--transition-base);
+}
+
+.quick-link-card:hover .card-title {
+    color: var(--primary);
+}
+
+.quick-link-arrow {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: var(--transition-base);
+    color: var(--primary);
+}
+
+.quick-link-card:hover .quick-link-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Responsive adjustments for Quick Links */
+@media (max-width: 992px) {
+    .quick-link-card {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .quick-link-icon {
+        font-size: 1.75rem;
+        height: 60px;
+        width: 60px;
+        line-height: 60px;
+    }
+
+    .quick-link-arrow {
+        display: none;
     }
 }
 </style>
