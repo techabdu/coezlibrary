@@ -18,6 +18,7 @@
     
     <!-- Custom CSS -->
     <link href="<?= BASE_URL ?>/public/css/style.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/public/css/navigation.css" rel="stylesheet">
     
     <!-- Additional CSS -->
     <?php if (isset($extraCss)): ?>
@@ -32,6 +33,9 @@
 
     <!-- Main Container -->
     <div class="min-vh-100 d-flex flex-column">
+        <!-- Navigation -->
+        <?php require_once APP_PATH . '/views/layouts/navigation.php'; ?>
+
         <!-- Flash Messages -->
         <?php if ($flash = $this->getFlash()): ?>
             <div class="alert alert-<?= $flash['type'] ?> alert-dismissible fade show m-0" role="alert">
