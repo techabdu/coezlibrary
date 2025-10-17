@@ -1,0 +1,126 @@
+/*
+ * Theme Styles and Color Schemes
+ */
+
+/* ========== Light Theme (Default) ========== */
+:root[data-theme="light"] {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --text-color: #333333;
+    --text-muted: #666666;
+    --light-gray: #f5f5f5;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #666666;
+    --white: #ffffff;
+}
+
+/* ========== Dark Theme ========== */
+:root[data-theme="dark"] {
+    --primary-color: #34495e;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --text-color: #f5f5f5;
+    --text-muted: #bdc3c7;
+    --light-gray: #2c3e50;
+    --medium-gray: #34495e;
+    --dark-gray: #95a5a6;
+    --white: #1a1a1a;
+    
+    /* Component Colors */
+    --card-bg: #2c3e50;
+    --input-bg: #34495e;
+    --input-border: #456789;
+    --input-text: #ecf0f1;
+}
+
+/* Dark Theme Specific Styles */
+[data-theme="dark"] {
+    /* Body */
+    background-color: var(--white);
+    color: var(--text-color);
+    
+    /* Cards */
+    .card {
+        background-color: var(--card-bg);
+        border-color: var(--medium-gray);
+    }
+    
+    /* Forms */
+    .form-control {
+        background-color: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--input-text);
+    }
+    
+    .form-control:focus {
+        background-color: var(--input-bg);
+        color: var(--input-text);
+    }
+    
+    /* Tables */
+    .table {
+        color: var(--text-color);
+    }
+    
+    .table th {
+        background-color: var(--medium-gray);
+    }
+    
+    .table td {
+        border-color: var(--medium-gray);
+    }
+}
+
+/* ========== High Contrast Theme ========== */
+:root[data-theme="high-contrast"] {
+    --primary-color: #000000;
+    --secondary-color: #0000ff;
+    --accent-color: #ff0000;
+    --text-color: #000000;
+    --text-muted: #333333;
+    --light-gray: #ffffff;
+    --medium-gray: #666666;
+    --dark-gray: #333333;
+    --white: #ffffff;
+    
+    /* Increase contrast for accessibility */
+    --shadow-sm: 0 0 0 2px #000000;
+    --shadow-md: 0 0 0 3px #000000;
+    --shadow-lg: 0 0 0 4px #000000;
+}
+
+/* High Contrast Specific Styles */
+[data-theme="high-contrast"] {
+    * {
+        border-color: #000000 !important;
+    }
+    
+    a {
+        text-decoration: underline !important;
+    }
+    
+    .btn {
+        border: 2px solid #000000 !important;
+    }
+    
+    .card {
+        border: 2px solid #000000 !important;
+        box-shadow: none !important;
+    }
+}
+
+/* ========== Print Theme ========== */
+@media print {
+    :root {
+        --primary-color: #000000;
+        --secondary-color: #333333;
+        --accent-color: #666666;
+        --text-color: #000000;
+        --text-muted: #333333;
+        --light-gray: #ffffff;
+        --medium-gray: #cccccc;
+        --dark-gray: #666666;
+        --white: #ffffff;
+    }
+}
