@@ -40,10 +40,29 @@ class Router {
     /**
      * Parse the URL and set controller, action and parameters
      */
+    /**
+     * Static page routes that map to PageController
+     * @var array
+     */
+    private $staticPages = [
+        'about' => 'about',
+        'services' => 'services',
+        'policies' => 'policies'
+    ];
+
     public function __construct() {
         $url = $this->parseUrl();
         
-        // Set controller
+        // Check if this is a static page route
+        if (isset($url[0]) && array_key_exists($url[0], $this->staticPages)) {
+            $this->controller = 'PageController';
+            $this->action = $this->staticPages[$url[0]];
+            array_shift($url);
+            $this->params = $url;
+            return;
+        }
+        
+        // Set controller for non-static pages
         $this->controller = isset($url[0]) ? ucfirst($url[0]) . 'Controller' : $this->defaultController . 'Controller';
         array_shift($url);
         
@@ -72,7 +91,7 @@ class Router {
      */
     public function dispatch(): void {
         // Check if controller exists
-        $controllerClass = "App\\Controllers\\{$this->controller}";
+        $controllerClass = "\\App\\Controllers\\{$this->controller}";
         if (!class_exists($controllerClass)) {
             $this->handleError(404, "Controller not found: {$this->controller}");
             return;
