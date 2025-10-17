@@ -250,13 +250,57 @@
     </div>
 </section>
 
-<!-- Placeholder for Announcements Section -->
-<div id="announcements"></div>
+<!-- Announcements Section -->
+<section class="announcements py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Latest News & Announcements</h2>
+            <a href="<?= BASE_URL ?>/announcements" class="btn btn-outline-primary">
+                View All <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
 
-<!-- Add styles for Library Info and Quick Links Sections -->
-<style>
-/* Library Info Section Styles */
-<style>
+        <?php if (empty($announcements)): ?>
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                No announcements available at this time.
+            </div>
+        <?php else: ?>
+            <div class="row g-4">
+                <?php foreach ($announcements as $index => $announcement): ?>
+                    <div class="col-lg-4 col-md-6">
+                        <article class="announcement-card card h-100">
+                            <div class="card-body">
+                                <div class="announcement-date mb-2">
+                                    <i class="bi bi-calendar3 me-2"></i>
+                                    <?= date('F j, Y', strtotime($announcement['date_posted'])) ?>
+                                </div>
+                                <h3 class="card-title h5">
+                                    <?= htmlspecialchars($announcement['title']) ?>
+                                </h3>
+                                <p class="card-text announcement-excerpt">
+                                    <?= htmlspecialchars(
+                                        strlen($announcement['content']) > 150 
+                                            ? substr($announcement['content'], 0, 147) . '...' 
+                                            : $announcement['content']
+                                    ) ?>
+                                </p>
+                                <a href="<?= BASE_URL ?>/announcements/view/<?= $announcement['id'] ?>" 
+                                   class="btn btn-link text-primary p-0 stretched-link">
+                                    Read More <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
+
+<!-- Homepage Styles -->
+<style type="text/css">
+/* Homepage Section Styles */
 /* Library Info Section Styles */
 .library-info {
     background-color: var(--light-gray) !important;
@@ -390,11 +434,86 @@
         display: none;
     }
 }
-</style>
 
-<!-- Add custom styles for the carousel -->
-<style>
-/* Hero Section Styles */
+/* Announcements Section Styles */
+.announcements {
+    background-color: var(--light-gray) !important;
+}
+
+.announcement-card {
+    transition: var(--transition-base);
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.announcement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.announcement-date {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.announcement-card .card-title {
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    color: var(--gray-900);
+}
+
+.announcement-excerpt {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    display: box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
+    max-height: 4.5em; /* Fallback for non-WebKit browsers: line-height * number of lines */
+}
+
+.announcement-card .btn-link {
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.announcement-card .btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments for Announcements */
+@media (max-width: 992px) {
+    .announcement-card {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .announcements h2 {
+        font-size: 1.75rem;
+    }
+    
+    .announcement-card .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .announcement-excerpt {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .announcements .btn-outline-primary {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Add custom styles for the carousel */
 .hero-section {
     margin-top: -1.5rem; /* Compensate for navbar margin */
     margin-bottom: 2rem;
