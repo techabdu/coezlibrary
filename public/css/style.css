@@ -1,36 +1,114 @@
-/* Main Styles for College Library Website */
+/*
+ * Base Styles for College Library Website
+ * Version: 1.0.0
+ */
 
-/* Custom Variables */
+/* ========== Custom Properties ========== */
 :root {
+    /* Color Scheme */
     --primary-color: #2c3e50;
     --secondary-color: #3498db;
     --accent-color: #e74c3c;
-    --text-color: #333;
+    --success-color: #2ecc71;
+    --warning-color: #f1c40f;
+    --danger-color: #e74c3c;
+    --info-color: #3498db;
+    
+    /* Neutral Colors */
+    --text-color: #333333;
+    --text-muted: #666666;
     --light-gray: #f5f5f5;
-    --dark-gray: #666;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #666666;
     --white: #ffffff;
-    --header-height: 60px;
-    --footer-height: 300px;
+    
+    /* Typography */
+    --font-primary: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-heading: var(--font-primary);
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.125rem;
+    --line-height-base: 1.6;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Border Radius */
+    --border-radius-sm: 0.25rem;
+    --border-radius-md: 0.375rem;
+    --border-radius-lg: 0.5rem;
+    --border-radius-xl: 1rem;
+    
+    /* Box Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    
+    /* Z-index */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    
+    /* Transitions */
+    --transition-base: all 0.2s ease-in-out;
+    --transition-slow: all 0.3s ease-in-out;
+    --transition-fast: all 0.1s ease-in-out;
 }
 
-/* Global Styles */
+/* ========== Global Reset & Base Styles ========== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
 body {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
     color: var(--text-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
+    background-color: var(--white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Typography */
+/* ========== Typography ========== */
 h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
     color: var(--primary-color);
-    margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p {
+    margin-bottom: var(--spacing-md);
 }
 
 /* Links */
 a {
     color: var(--secondary-color);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: var(--transition-base);
 }
 
 a:hover {
@@ -38,7 +116,22 @@ a:hover {
     text-decoration: none;
 }
 
+/* Lists */
+ul, ol {
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-xl);
+}
+
+/* ========== Components ========== */
+
 /* Buttons */
+.btn {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-base);
+}
+
 .btn-primary {
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
@@ -51,72 +144,126 @@ a:hover {
 
 /* Cards */
 .card {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
 }
 
-/* Alert customization */
+.card-header {
+    background-color: var(--white);
+    border-bottom: 1px solid var(--medium-gray);
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.card-body {
+    padding: var(--spacing-lg);
+}
+
+/* Forms */
+.form-control {
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--medium-gray);
+    padding: 0.5rem 0.75rem;
+    transition: var(--transition-base);
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Alerts */
 .alert {
-    border-radius: 0;
-    margin-bottom: 0;
+    border: none;
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
 }
 
-/* Footer customization */
-.footer {
-    background-color: var(--primary-color) !important;
+.alert-success { background-color: rgba(46, 204, 113, 0.1); color: var(--success-color); }
+.alert-warning { background-color: rgba(241, 196, 15, 0.1); color: var(--warning-color); }
+.alert-danger { background-color: rgba(231, 76, 60, 0.1); color: var(--danger-color); }
+.alert-info { background-color: rgba(52, 152, 219, 0.1); color: var(--info-color); }
+
+/* Tables */
+.table {
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
 }
 
-.footer a:hover {
-    color: var(--accent-color) !important;
-}
-
-/* Skip to main content */
-.visually-hidden-focusable:not(:focus):not(:active) {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-}
-
-/* Utility Classes */
-.bg-light-gray {
+.table th {
+    font-weight: 600;
     background-color: var(--light-gray);
 }
 
-.text-primary {
-    color: var(--primary-color) !important;
+.table td, .table th {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--medium-gray);
 }
 
-.text-secondary {
-    color: var(--secondary-color) !important;
+/* ========== Utility Classes ========== */
+
+/* Text utilities */
+.text-primary { color: var(--primary-color) !important; }
+.text-secondary { color: var(--secondary-color) !important; }
+.text-accent { color: var(--accent-color) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+/* Background utilities */
+.bg-primary { background-color: var(--primary-color) !important; }
+.bg-secondary { background-color: var(--secondary-color) !important; }
+.bg-accent { background-color: var(--accent-color) !important; }
+.bg-light { background-color: var(--light-gray) !important; }
+
+/* Spacing utilities */
+.mb-xs { margin-bottom: var(--spacing-xs) !important; }
+.mb-sm { margin-bottom: var(--spacing-sm) !important; }
+.mb-md { margin-bottom: var(--spacing-md) !important; }
+.mb-lg { margin-bottom: var(--spacing-lg) !important; }
+.mb-xl { margin-bottom: var(--spacing-xl) !important; }
+
+/* Shadow utilities */
+.shadow-sm { box-shadow: var(--shadow-sm) !important; }
+.shadow-md { box-shadow: var(--shadow-md) !important; }
+.shadow-lg { box-shadow: var(--shadow-lg) !important; }
+
+/* Border utilities */
+.rounded-sm { border-radius: var(--border-radius-sm) !important; }
+.rounded-md { border-radius: var(--border-radius-md) !important; }
+.rounded-lg { border-radius: var(--border-radius-lg) !important; }
+
+/* ========== Responsive Design ========== */
+@media (max-width: 576px) {
+    html { font-size: 14px; }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    h4 { font-size: 1.25rem; }
+    h5 { font-size: 1.1rem; }
+    h6 { font-size: 1rem; }
+    
+    .card-body { padding: var(--spacing-md); }
 }
 
-.text-accent {
-    color: var(--accent-color) !important;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    :root {
-        --header-height: 56px;
-        --footer-height: 400px;
+/* ========== Print Styles ========== */
+@media print {
+    body {
+        background: none;
+        color: black;
     }
     
-    .container {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-}
-
-/* Print styles */
-@media print {
     .no-print {
         display: none !important;
     }
@@ -126,7 +273,12 @@ a:hover {
     }
     
     .container {
-        width: 100%;
         max-width: none;
+        padding: 0;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
     }
 }

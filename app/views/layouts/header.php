@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,8 @@
     
     <!-- Custom CSS -->
     <link href="<?= BASE_URL ?>/public/css/style.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/public/css/theme.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/public/css/utilities.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/public/css/navigation.css" rel="stylesheet">
     
     <!-- Additional CSS -->
