@@ -17,15 +17,23 @@ class StaffMember extends Model {
      */
     public function getAllActiveStaff(): array {
         try {
-            $stmt = $this->db->query(
+            $stmt = $this->getDB()->query(
                 "SELECT * FROM staff_members 
                 WHERE is_active = 1 
                 ORDER BY display_order, name"
             );
-            return $stmt->fetchAll(PDO::FETCH_OBJ);
+            $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+            
+            if (empty($results)) {
+                error_log("StaffMember: No active staff members found in database");
+                throw new Exception("No active staff members found");
+            }
+            
+            return $results;
         } catch (Exception $e) {
             error_log("Error in StaffMember->getAllActiveStaff(): " . $e->getMessage());
-            return [];
+            error_log("Stack trace: " . $e->getTraceAsString());
+            throw $e;
         }
     }
 
@@ -34,14 +42,22 @@ class StaffMember extends Model {
      * @param int $id Staff member ID
      * @return array|null
      */
-    public function getStaffMemberById(int $id): ?array {
+    public function getStaffMemberById(int $id): ?object {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM staff_members WHERE id = :id");
+            $stmt = $this->getDB()->prepare("SELECT * FROM staff_members WHERE id = :id");
             $stmt->execute(['id' => $id]);
-            return $stmt->fetch(PDO::FETCH_OBJ) ?: null;
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+            
+            if (!$result) {
+                error_log("StaffMember: No staff member found with ID: " . $id);
+                return null;
+            }
+            
+            return $result;
         } catch (Exception $e) {
             error_log("Error in StaffMember->getStaffMemberById(): " . $e->getMessage());
-            return null;
+            error_log("Stack trace: " . $e->getTraceAsString());
+            throw $e;
         }
     }
 
