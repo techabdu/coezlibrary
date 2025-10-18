@@ -17,11 +17,19 @@ class CollegeInfo extends Model {
      */
     public function getAllSections(): array {
         try {
-            $stmt = $this->db->query("SELECT * FROM college_info ORDER BY section");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $this->getDB()->query("SELECT * FROM college_info ORDER BY section");
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (empty($results)) {
+                error_log("CollegeInfo: No college sections found in database");
+                return [];
+            }
+            
+            return $results;
         } catch (Exception $e) {
             error_log("Error in CollegeInfo->getAllSections(): " . $e->getMessage());
-            return [];
+            error_log("Stack trace: " . $e->getTraceAsString());
+            throw $e;
         }
     }
 

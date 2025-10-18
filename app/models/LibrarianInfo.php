@@ -17,11 +17,19 @@ class LibrarianInfo extends Model {
      */
     public function getLibrarianInfo(): ?array {
         try {
-            $stmt = $this->db->query("SELECT * FROM librarian_info LIMIT 1");
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+            $stmt = $this->getDB()->query("SELECT * FROM librarian_info LIMIT 1");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result === false) {
+                error_log("LibrarianInfo: No librarian data found in database");
+                return null;
+            }
+            
+            return $result;
         } catch (Exception $e) {
             error_log("Error in LibrarianInfo->getLibrarianInfo(): " . $e->getMessage());
-            return null;
+            error_log("Stack trace: " . $e->getTraceAsString());
+            throw $e;
         }
     }
 
