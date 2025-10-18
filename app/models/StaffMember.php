@@ -22,7 +22,7 @@ class StaffMember extends Model {
                 WHERE is_active = 1 
                 ORDER BY display_order, name"
             );
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (Exception $e) {
             error_log("Error in StaffMember->getAllActiveStaff(): " . $e->getMessage());
             return [];
@@ -38,7 +38,7 @@ class StaffMember extends Model {
         try {
             $stmt = $this->db->prepare("SELECT * FROM staff_members WHERE id = :id");
             $stmt->execute(['id' => $id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+            return $stmt->fetch(PDO::FETCH_OBJ) ?: null;
         } catch (Exception $e) {
             error_log("Error in StaffMember->getStaffMemberById(): " . $e->getMessage());
             return null;

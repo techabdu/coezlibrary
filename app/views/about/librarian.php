@@ -5,64 +5,72 @@
  */
 ?>
 
-<div class="page-header bg-light">
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5 mb-5">
     <div class="container py-5">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-3">
-                <?php foreach ($breadcrumbs as $breadcrumb): ?>
-                    <li class="breadcrumb-item <?= $breadcrumb['link'] === null ? 'active' : '' ?>">
-                        <?php if ($breadcrumb['link']): ?>
-                            <a href="<?= $breadcrumb['link'] ?>"><?= $breadcrumb['title'] ?></a>
-                        <?php else: ?>
-                            <?= $breadcrumb['title'] ?>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ol>
-        </nav>
-        
-        <h1 class="display-4">The Librarian</h1>
-        <p class="lead text-muted">Meet our head librarian and learn about their vision for the library.</p>
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Meet Our Librarian</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>" class="text-white">Home</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Head Librarian</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 
-<div class="container py-5">
-    <?php if (isset($librarian) && !empty($librarian)): ?>
-        <div class="row">
-            <!-- Librarian Profile -->
-            <div class="col-lg-4 mb-4 mb-lg-0">
-                <div class="card profile-card">
-                    <img src="<?= htmlspecialchars($librarian['image_path']) ?>" 
-                         class="card-img-top" 
-                         alt="<?= htmlspecialchars($librarian['name']) ?>">
-                    <div class="card-body">
-                        <h2 class="h4 card-title"><?= htmlspecialchars($librarian['name']) ?></h2>
-                        <p class="card-subtitle mb-3 text-primary"><?= htmlspecialchars($librarian['title']) ?></p>
-                        
-                        <div class="contact-info">
-                            <?php if ($librarian['email']): ?>
-                                <p class="mb-2">
-                                    <i class="bi bi-envelope me-2"></i>
-                                    <a href="mailto:<?= htmlspecialchars($librarian['email']) ?>">
-                                        <?= htmlspecialchars($librarian['email']) ?>
-                                    </a>
-                                </p>
-                            <?php endif; ?>
-                            
-                            <?php if ($librarian['phone']): ?>
-                                <p class="mb-2">
-                                    <i class="bi bi-telephone me-2"></i>
-                                    <?= htmlspecialchars($librarian['phone']) ?>
-                                </p>
-                            <?php endif; ?>
-                            
-                            <?php if ($librarian['office_hours']): ?>
-                                <p class="mb-2">
-                                    <i class="bi bi-clock me-2"></i>
-                                    <?= htmlspecialchars($librarian['office_hours']) ?>
-                                </p>
-                            <?php endif; ?>
+<!-- Content Section -->
+<section class="content-section py-5">
+    <div class="container">
+        <?php if (isset($librarian) && !empty($librarian)): ?>
+            <div class="row g-4">
+                <!-- Librarian Profile -->
+                <div class="col-lg-4">
+                    <div class="card profile-card border-0 shadow-sm h-100">
+                        <div class="position-relative">
+                            <img src="<?= htmlspecialchars($librarian['image_path']) ?>" 
+                                 class="card-img-top profile-image" 
+                                 alt="<?= htmlspecialchars($librarian['name']) ?>">
                         </div>
+                        <div class="card-body p-4">
+                            <div class="text-center mb-4">
+                                <h2 class="h3 card-title mb-1"><?= htmlspecialchars($librarian['name']) ?></h2>
+                                <p class="card-subtitle text-primary"><?= htmlspecialchars($librarian['title']) ?></p>
+                            </div>
+                            
+                            <div class="contact-info">
+                                <?php if ($librarian['email']): ?>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="info-icon-sm me-3">
+                                            <i class="bi bi-envelope-fill"></i>
+                                        </div>
+                                        <a href="mailto:<?= htmlspecialchars($librarian['email']) ?>" class="text-decoration-none">
+                                            <?= htmlspecialchars($librarian['email']) ?>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <?php if ($librarian['phone']): ?>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="info-icon-sm me-3">
+                                            <i class="bi bi-telephone-fill"></i>
+                                        </div>
+                                        <span><?= htmlspecialchars($librarian['phone']) ?></span>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <?php if ($librarian['office_hours']): ?>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="info-icon-sm me-3">
+                                            <i class="bi bi-clock-fill"></i>
+                                        </div>
+                                        <span><?= htmlspecialchars($librarian['office_hours']) ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
 
                         <?php if (isset($social_links) && !empty($social_links)): ?>
                             <div class="social-links mt-3">

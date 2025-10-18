@@ -36,22 +36,38 @@ class Router {
      * @var array
      */
     private $params = [];
-
+    
     /**
-     * Parse the URL and set controller, action and parameters
+     * Custom routes that map URL patterns to controller actions
+     * @var array
      */
+    private $customRoutes = [
+        'about/college' => ['controller' => 'Page', 'action' => 'college'],
+        'about/librarian' => ['controller' => 'Page', 'action' => 'librarian'],
+        'about/staff' => ['controller' => 'Page', 'action' => 'staff']
+    ];
+
     /**
      * Static page routes that map to PageController
      * @var array
      */
     private $staticPages = [
-        'about' => 'about',
         'services' => 'services',
         'policies' => 'policies'
     ];
 
     public function __construct() {
         $url = $this->parseUrl();
+        $path = is_array($url) ? implode('/', $url) : '';
+
+        // Check custom routes first
+        if (!empty($path) && isset($this->customRoutes[$path])) {
+            $route = $this->customRoutes[$path];
+            $this->controller = $route['controller'] . 'Controller';
+            $this->action = $route['action'];
+            $this->params = [];
+            return;
+        }
         
         // Check if this is a static page route
         if (isset($url[0]) && array_key_exists($url[0], $this->staticPages)) {
@@ -62,15 +78,13 @@ class Router {
             return;
         }
         
-        // Set controller for non-static pages
+        // Default routing
         $this->controller = isset($url[0]) ? ucfirst($url[0]) . 'Controller' : $this->defaultController . 'Controller';
         array_shift($url);
         
-        // Set action
         $this->action = isset($url[0]) ? $url[0] : $this->defaultAction;
         array_shift($url);
         
-        // Set parameters
         $this->params = $url ?? [];
     }
 
