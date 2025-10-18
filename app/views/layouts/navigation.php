@@ -68,6 +68,13 @@
                     </a>
                 </li>
 
+                <!-- Policies -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASE_URL ?>/policies">
+                        <i class="bi bi-file-text"></i> Policies
+                    </a>
+                </li>
+
                 <!-- FAQ -->
                 <li class="nav-item">
                     <a class="nav-link" href="<?= BASE_URL ?>/faq">
@@ -84,7 +91,7 @@
             </ul>
 
             <!-- Search Form -->
-            <form class="d-flex me-2" action="<?= BASE_URL ?>/search" method="GET">
+            <form class="d-flex" action="<?= BASE_URL ?>/search" method="GET">
                 <div class="input-group">
                     <input class="form-control" type="search" name="q" placeholder="Search resources..." 
                            aria-label="Search" required>
@@ -93,33 +100,6 @@
                     </button>
                 </div>
             </form>
-
-            <!-- Admin Login/User Menu -->
-            <?php if (isset($this->user)): ?>
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-light" href="#" id="userDropdown" role="button" 
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle"></i> <?= htmlspecialchars($this->user['username']) ?>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li>
-                            <a class="dropdown-item" href="<?= BASE_URL ?>/admin/dashboard">
-                                <i class="bi bi-speedometer2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item" href="<?= BASE_URL ?>/admin/logout">
-                                <i class="bi bi-box-arrow-right"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            <?php else: ?>
-                <a href="<?= BASE_URL ?>/admin/login" class="btn btn-outline-light">
-                    <i class="bi bi-box-arrow-in-right"></i> Admin Login
-                </a>
-            <?php endif; ?>
         </div>
     </div>
 </header>
