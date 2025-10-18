@@ -54,11 +54,30 @@
                     </ul>
                 </li>
 
-                <!-- About -->
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= BASE_URL ?>/about">
+                <!-- About Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-info-circle"></i> About
                     </a>
+                    <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                        <li>
+                            <a class="dropdown-item" href="<?= BASE_URL ?>/about/college">
+                                <i class="bi bi-building"></i> The College
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="<?= BASE_URL ?>/about/librarian">
+                                <i class="bi bi-person-badge"></i> The Librarian
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="<?= BASE_URL ?>/about/staff">
+                                <i class="bi bi-people"></i> The Staff
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <!-- Services -->

@@ -24,28 +24,91 @@ class PageController extends Controller {
 
 
     /**
-     * About page
+     * College information page
      */
-    public function about() {
+    public function college() {
         try {
-            $pageContent = $this->staticPageModel->getPageBySlug('about-us');
+            $collegeInfo = new \App\Models\CollegeInfo();
+            $sections = $collegeInfo->getAllSections();
             
             $data = [
-                'pageTitle' => 'About Us - ' . SITE_NAME,
-                'metaDescription' => 'Learn about our library, our mission, and our dedicated staff.',
-                'content' => $pageContent,
+                'pageTitle' => 'The College - ' . SITE_NAME,
+                'metaDescription' => 'Learn about our college history, mission, vision, and values.',
+                'sections' => $sections,
                 'breadcrumbs' => [
-                    ['title' => 'Home', 'link' => BASE_URL],
-                    ['title' => 'About Us', 'link' => null]
+                    ['title' => 'Home', 'link' => '/'],
+                    ['title' => 'About', 'link' => '#'],
+                    ['title' => 'The College', 'link' => null]
                 ]
             ];
             
-            $this->render('pages/about', $data);
+            $this->render('about/college', $data);
         } catch (Exception $e) {
-            error_log("Error in PageController->about(): " . $e->getMessage());
+            error_log("Error in PageController->college(): " . $e->getMessage());
             $this->render('errors/500', [
                 'pageTitle' => 'Error - ' . SITE_NAME,
-                'error' => 'Failed to load the About page.'
+                'error' => 'Failed to load the College information page.'
+            ]);
+        }
+    }
+
+    /**
+     * Librarian profile page
+     */
+    public function librarian() {
+        try {
+            $librarianInfo = new \App\Models\LibrarianInfo();
+            $librarian = $librarianInfo->getLibrarianInfo();
+            $socialLinks = $librarianInfo->getSocialLinks();
+            
+            $data = [
+                'pageTitle' => 'The Librarian - ' . SITE_NAME,
+                'metaDescription' => 'Meet our head librarian and learn about their vision for the library.',
+                'librarian' => $librarian,
+                'social_links' => $socialLinks,
+                'breadcrumbs' => [
+                    ['title' => 'Home', 'link' => '/'],
+                    ['title' => 'About', 'link' => '#'],
+                    ['title' => 'The Librarian', 'link' => null]
+                ]
+            ];
+            
+            $this->render('about/librarian', $data);
+        } catch (Exception $e) {
+            error_log("Error in PageController->librarian(): " . $e->getMessage());
+            $this->render('errors/500', [
+                'pageTitle' => 'Error - ' . SITE_NAME,
+                'error' => 'Failed to load the Librarian profile page.'
+            ]);
+        }
+    }
+
+    /**
+     * Library staff page
+     */
+    public function staff() {
+        try {
+            $staffModel = new \App\Models\StaffMember();
+            $staff = $staffModel->getAllActiveStaff();
+            
+            $data = [
+                'pageTitle' => 'Our Staff - ' . SITE_NAME,
+                'metaDescription' => 'Meet our dedicated library staff members.',
+                'staff' => $staff,
+                'breadcrumbs' => [
+                    ['title' => 'Home', 'link' => '/'],
+                    ['title' => 'About', 'link' => '#'],
+                    ['title' => 'The Staff', 'link' => null]
+                ]
+            ];
+            
+            $this->render('about/staff', $data);
+        } catch (Exception $e) {
+            error_log("Error in PageController->staff(): " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $this->render('errors/500', [
+                'pageTitle' => 'Error - ' . SITE_NAME,
+                'error' => DISPLAY_ERRORS ? $e->getMessage() : 'Failed to load the About page.'
             ]);
         }
     }

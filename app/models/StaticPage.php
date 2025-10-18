@@ -31,10 +31,21 @@ class StaticPage extends Model {
             $stmt->bindValue(':slug', $slug, PDO::PARAM_STR);
             $stmt->execute();
             
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result === false) {
+                error_log("Page not found with slug: " . $slug);
+                throw new Exception("Page not found: " . $slug);
+            }
+            
+            return $result;
         } catch (PDOException $e) {
+            error_log("Database error in StaticPage->getPageBySlug(): " . $e->getMessage());
+            error_log("SQL: " . $sql . ", Slug: " . $slug);
+            throw new Exception('Database error while fetching page content');
+        } catch (Exception $e) {
             error_log("Error in StaticPage->getPageBySlug(): " . $e->getMessage());
-            throw new Exception('Failed to fetch page content');
+            throw $e;
         }
     }
 
