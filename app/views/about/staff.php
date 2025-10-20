@@ -14,7 +14,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>" class="text-white">Home</a></li>
-                        <li class="breadcrumb-item text-white active" aria-current="page">Library Staff</li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Library Staff</li>
                     </ol>
                 </nav>
             </div>

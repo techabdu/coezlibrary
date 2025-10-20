@@ -21,6 +21,7 @@
     <link href="<?= BASE_URL ?>/public/css/theme.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/public/css/utilities.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/public/css/navigation.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/public/css/bootstrap-overrides.css" rel="stylesheet">
     
     <!-- Additional CSS -->
     <?php if (isset($extraCss)): ?>

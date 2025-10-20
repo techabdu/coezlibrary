@@ -10,7 +10,7 @@
     <div class="container py-5">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3 text-white">About Our College</h1>
+                <h1 class="display-4 fw-bold mb-3 text-white">About Our Library</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>" class="text-white">Home</a></li>

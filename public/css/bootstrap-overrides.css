@@ -1,0 +1,58 @@
+/* Bootstrap Component Overrides */
+
+/* Navbar */
+.navbar-dark {
+    background-color: var(--primary-color) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--secondary-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--white);
+}
+
+/* Alerts */
+.alert-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: var(--white);
+}
+
+.alert-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: var(--primary-color);
+}
+
+.alert-danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+    color: var(--white);
+}
+
+/* Cards */
+.card:hover {
+    border-color: var(--secondary-color);
+}
