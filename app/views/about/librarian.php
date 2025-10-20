@@ -6,11 +6,11 @@
 ?>
 
 <!-- Hero Section -->
-<section class="hero-section bg-primary text-white py-5 mb-5">
+<section class="hero-section bg-primary py-5 mb-5">
     <div class="container py-5">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3">Meet Our Librarian</h1>
+                <h1 class="display-4 fw-bold mb-3 text-white">Meet Our Librarian</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>" class="text-white">Home</a></li>

@@ -7,8 +7,8 @@
 define('BASE_URL', 'http://localhost/coezlibrary');
 
 // Site Information
-define('SITE_NAME', 'College E-Library');
-define('SITE_DESCRIPTION', 'Digital Library Management System');
+define('SITE_NAME', 'College Library');
+define('SITE_DESCRIPTION', 'Library Management System');
 define('ADMIN_EMAIL', 'admin@college.edu');
 
 // Directory Paths

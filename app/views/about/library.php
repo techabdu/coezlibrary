@@ -6,11 +6,11 @@
 ?>
 
 <!-- Hero Section -->
-<section class="hero-section bg-primary text-white py-5 mb-5">
+<section class="hero-section bg-primary py-5 mb-5">
     <div class="container py-5">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3">About Our College</h1>
+                <h1 class="display-4 fw-bold mb-3 text-white">About Our College</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>" class="text-white">Home</a></li>
@@ -21,10 +21,6 @@
         </div>
     </div>
 </section>
-</ol>
-        </nav>
-    </div>
-</div>
 
 <!-- Content Section -->
 <section class="content-section py-5">
@@ -128,6 +124,7 @@
 <style>
 .hero-section {
     background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url("<?= BASE_URL ?>/public/images/carousel/default-library.jpg") center/cover no-repeat;
+    color: white;
 }
 
 .info-icon {

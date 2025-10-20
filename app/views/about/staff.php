@@ -6,18 +6,17 @@
 ?>
 
 <!-- Hero Section -->
-<section class="hero-section bg-primary text-white py-5 mb-5">
+<section class="hero-section bg-primary py-5 mb-5">
     <div class="container py-5">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3">Our Library Staff</h1>
+                <h1 class="display-4 fw-bold mb-3 text-white">Our Library Staff</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?= BASE_URL ?>" class="text-white">Home</a></li>
                         <li class="breadcrumb-item text-white active" aria-current="page">Library Staff</li>
                     </ol>
                 </nav>
-                <p class="lead mb-0 opacity-75">Meet the dedicated team behind our library services.</p>
             </div>
         </div>
     </div>
@@ -26,84 +25,175 @@
 <!-- Staff Section -->
 <section class="staff-section py-5">
     <div class="container">
-        <?php if (!empty($staff)): ?>
-            <div class="row g-4">
-                <?php foreach ($staff as $member): ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card staff-card border-0 shadow-sm h-100">
-                            <?php if ($member->image_path): ?>
-                                <div class="card-img-container">
-                                    <img src="<?= htmlspecialchars($member->image_path) ?>" 
-                                         class="card-img-top staff-image" 
-                                         alt="<?= htmlspecialchars($member->name) ?>">
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="card-body p-4">
-                                <h2 class="h5 card-title mb-1"><?= htmlspecialchars($member->name) ?></h2>
-                                <p class="card-subtitle mb-3 text-primary fw-medium">
-                                    <?= htmlspecialchars($member->position) ?>
-                                </p>
-                                
-                                <?php if (!empty($member->department)): ?>
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="info-icon-sm me-3">
-                                            <i class="bi bi-diagram-2-fill"></i>
-                                        </div>
-                                        <span><?= htmlspecialchars($member->department) ?></span>
-                                    </div>
-                                <?php endif; ?>
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Library Organizational Structure</h2>
+            <p class="lead text-muted">Our hierarchical structure ensures efficient service delivery and clear lines of responsibility</p>
+        </div>
 
-                                <?php if (!empty($member->bio)): ?>
-                                    <p class="card-text mb-4">
-                                        <?= htmlspecialchars($member->bio) ?>
-                                    </p>
-                                <?php endif; ?>
+        <!-- College Librarian Level -->
+        <div class="organogram-level level-1 mb-5">
+            <div class="position-box primary-position mx-auto">
+                <div class="position-content">
+                    <i class="bi bi-person-workspace display-5 mb-3"></i>
+                    <h3 class="h4">College Librarian</h3>
+                    <p class="text-muted mb-0">Overall Library Management & Strategic Direction</p>
+                </div>
+            </div>
+        </div>
 
-                                <div class="contact-info mt-auto">
-                                    <?php if (!empty($member->email)): ?>
-                                        <div class="d-flex align-items-center mb-3">
-                                            <div class="info-icon-sm me-3">
-                                                <i class="bi bi-envelope-fill"></i>
-                                            </div>
-                                            <a href="mailto:<?= htmlspecialchars($member->email) ?>" 
-                                               class="text-decoration-none">
-                                                <?= htmlspecialchars($member->email) ?>
-                                            </a>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if (!empty($member->phone)): ?>
-                                        <div class="d-flex align-items-center mb-3">
-                                            <div class="info-icon-sm me-3">
-                                                <i class="bi bi-telephone-fill"></i>
-                                            </div>
-                                            <span><?= htmlspecialchars($member->phone) ?></span>
-                                        </div>
-                                    <?php endif; ?>
+        <!-- Deputy Librarian Level -->
+        <div class="organogram-level level-2 mb-5">
+            <div class="position-box secondary-position mx-auto">
+                <div class="position-content">
+                    <i class="bi bi-person-badge display-5 mb-3"></i>
+                    <h3 class="h4">Deputy Librarian</h3>
+                    <p class="text-muted mb-0">Operations & Resource Management</p>
+                </div>
+            </div>
+        </div>
 
-                                    <?php if (!empty($member->office_hours)): ?>
-                                        <div class="d-flex align-items-center">
-                                            <div class="info-icon-sm me-3">
-                                                <i class="bi bi-clock-fill"></i>
-                                            </div>
-                                            <span><?= htmlspecialchars($member->office_hours) ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+        <!-- Department Heads Level -->
+        <div class="organogram-level level-3 mb-5">
+            <div class="row justify-content-center g-4">
+                <div class="col-md-4">
+                    <div class="position-box tertiary-position">
+                        <div class="position-content">
+                            <i class="bi bi-book display-5 mb-3"></i>
+                            <h4 class="h5">Technical Services</h4>
+                            <ul class="list-unstyled small">
+                                <li>Acquisitions</li>
+                                <li>Cataloguing</li>
+                                <li>Classification</li>
+                            </ul>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                </div>
+                <div class="col-md-4">
+                    <div class="position-box tertiary-position">
+                        <div class="position-content">
+                            <i class="bi bi-people display-5 mb-3"></i>
+                            <h4 class="h5">Readers' Services</h4>
+                            <ul class="list-unstyled small">
+                                <li>Circulation</li>
+                                <li>Reference</li>
+                                <li>User Education</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="position-box tertiary-position">
+                        <div class="position-content">
+                            <i class="bi bi-pc-display display-5 mb-3"></i>
+                            <h4 class="h5">Digital Services</h4>
+                            <ul class="list-unstyled small">
+                                <li>E-Resources</li>
+                                <li>Digital Library</li>
+                                <li>ICT Support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-        <?php else: ?>
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>
-                Staff information is currently being updated. Please check back later.
+        </div>
+
+        <!-- Support Staff Level -->
+        <div class="organogram-level level-4">
+            <div class="row justify-content-center g-4">
+                <div class="col-md-3">
+                    <div class="position-box quaternary-position">
+                        <div class="position-content">
+                            <i class="bi bi-journal-text display-5 mb-3"></i>
+                            <h4 class="h5">Library Officers</h4>
+                            <p class="small mb-0">Collection Management & Processing</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="position-box quaternary-position">
+                        <div class="position-content">
+                            <i class="bi bi-laptop display-5 mb-3"></i>
+                            <h4 class="h5">Library Assistants</h4>
+                            <p class="small mb-0">User Support & Services</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="position-box quaternary-position">
+                        <div class="position-content">
+                            <i class="bi bi-tools display-5 mb-3"></i>
+                            <h4 class="h5">Support Staff</h4>
+                            <p class="small mb-0">Maintenance & General Support</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        <?php endif; ?>
+        </div>
     </div>
 </section>
+
+<!-- Add custom styles for the organogram -->
+<style>
+.organogram-level {
+    margin-bottom: 3rem;
+}
+
+.position-box {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.position-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.position-content {
+    text-align: center;
+}
+
+.primary-position {
+    border-left: 5px solid var(--bs-primary);
+    background-color: white;
+}
+
+.secondary-position {
+    border-left: 5px solid var(--bs-success);
+    background-color: white;
+}
+
+.tertiary-position {
+    border-left: 5px solid var(--bs-info);
+    background-color: white;
+    height: 100%;
+}
+
+.quaternary-position {
+    border-left: 5px solid var(--bs-warning);
+    background-color: white;
+    height: 100%;
+}
+
+.position-box i {
+    color: var(--bs-primary);
+}
+
+@media (max-width: 768px) {
+    .position-box {
+        margin-bottom: 2rem;
+    }
+    
+    .organogram-level {
+        margin-bottom: 1rem;
+    }
+}
+</style>
 
 <!-- Page Specific Styles -->
 <style>

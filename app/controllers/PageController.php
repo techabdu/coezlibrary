@@ -21,27 +21,27 @@ class PageController extends Controller {
     }
 
     /**
-     * College information page
+     * Library information page
      */
-    public function college() {
+    public function library() {
         try {
             // Create college info model instance and get data
             $collegeInfo = new CollegeInfo();
             $sections = $collegeInfo->getAllSections();
             
             if (empty($sections)) {
-                throw new Exception('College information not found');
+                throw new Exception('Library information not found');
             }
             
             // Prepare view data
             $data = [
-                'pageTitle' => 'The College - ' . SITE_NAME,
-                'metaDescription' => 'Learn about our college history, mission, vision, and values.',
+                'pageTitle' => 'The Library - ' . SITE_NAME,
+                'metaDescription' => 'Learn about our library history, mission, vision, and values.',
                 'sections' => $sections
             ];
             
             // Render the view
-            $this->render('about/college', $data);
+            $this->render('about/library', $data);
 
         } catch (Exception $e) {
             error_log("Error in PageController->college(): " . $e->getMessage());

@@ -42,7 +42,7 @@ class Router {
      * @var array
      */
     private $customRoutes = [
-        'about/college' => ['controller' => 'Page', 'action' => 'college'],
+        'about/library' => ['controller' => 'Page', 'action' => 'library'],
         'about/librarian' => ['controller' => 'Page', 'action' => 'librarian'],
         'about/staff' => ['controller' => 'Page', 'action' => 'staff']
     ];

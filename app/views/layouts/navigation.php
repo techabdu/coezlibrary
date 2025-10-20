@@ -62,8 +62,8 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
                         <li>
-                            <a class="dropdown-item" href="<?= BASE_URL ?>/about/college">
-                                <i class="bi bi-building"></i> The College
+                            <a class="dropdown-item" href="<?= BASE_URL ?>/about/library">
+                                <i class="bi bi-building"></i> The Library
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
