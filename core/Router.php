@@ -44,7 +44,8 @@ class Router {
     private $customRoutes = [
         'about/library' => ['controller' => 'Page', 'action' => 'library'],
         'about/librarian' => ['controller' => 'Page', 'action' => 'librarian'],
-        'about/staff' => ['controller' => 'Page', 'action' => 'staff']
+        'about/staff' => ['controller' => 'Page', 'action' => 'staff'],
+        'services' => ['controller' => 'Page', 'action' => 'services']
     ];
 
     /**

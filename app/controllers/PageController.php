@@ -11,6 +11,7 @@ use Exception;
 use App\Models\CollegeInfo;
 use App\Models\LibrarianInfo;
 use App\Models\StaffMember;
+use App\Models\Service;
 
 class PageController extends Controller {
     /**
@@ -91,7 +92,38 @@ class PageController extends Controller {
     /**
      * Library staff page
      */
-    public function staff() {
+    /**
+     * Library services page
+     */
+    public function services() {
+        try {
+            // Create service model instance and get data
+            $serviceModel = new Service();
+            $services = $serviceModel->getAllServices();
+            
+            if (empty($services)) {
+                throw new Exception('No services found');
+            }
+
+            // Prepare view data
+            $data = [
+                'pageTitle' => 'Library Services - ' . SITE_NAME,
+                'metaDescription' => 'Discover our comprehensive range of library services designed to support your academic journey.',
+                'services' => $services
+            ];
+            
+            // Render the view
+            $this->render('services', $data);
+
+        } catch (Exception $e) {
+            error_log("Error in PageController->services(): " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $this->render('errors/500', [
+                'pageTitle' => 'Error - ' . SITE_NAME,
+                'error' => DISPLAY_ERRORS ? $e->getMessage() : 'Failed to load the Services page.'
+            ]);
+        }
+    }    public function staff() {
         try {
             // Create staff model instance and get data
             $staffModel = new StaffMember();
