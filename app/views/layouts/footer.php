@@ -8,8 +8,8 @@
                     <div class="col-md-4 mb-3 mb-md-0">
                         <h5 class="text-white mb-3">Contact Us</h5>
                         <ul class="list-unstyled">
-                            <li><i class="bi bi-geo-alt-fill me-2"></i>123 College Street</li>
-                            <li><i class="bi bi-telephone-fill me-2"></i>+1-234-567-8900</li>
+                            <li><i class="bi bi-geo-alt-fill me-2"></i>The Collage Library, Permanent Side, F. C. T. Collage Of Education, Zuba, Abuja.</li>
+                            <li><i class="bi bi-telephone-fill me-2"></i>+234 000 000 0000</li>
                             <li><i class="bi bi-envelope-fill me-2"></i>library@college.edu</li>
                         </ul>
                     </div>
@@ -30,7 +30,7 @@
                         <h5 class="text-white mb-3">Library Hours</h5>
                         <ul class="list-unstyled">
                             <li>Monday - Friday: 8:00 AM - 9:00 PM</li>
-                            <li>Saturday: 9:00 AM - 5:00 PM</li>
+                            <li>Saturday: Closed</li>
                             <li>Sunday: Closed</li>
                         </ul>
                     </div>
