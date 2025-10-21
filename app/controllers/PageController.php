@@ -22,6 +22,37 @@ class PageController extends Controller {
     }
 
     /**
+     * Display library policies
+     */
+    public function policies() {
+        try {
+            // Create policy model instance and get data
+            $policyModel = new \App\Models\Policy();
+            $policies = $policyModel->getAllPolicies();
+            $categories = $policyModel->getAllCategories();
+
+            // Prepare view data
+            $data = [
+                'pageTitle' => 'Library Policies - ' . SITE_NAME,
+                'metaDescription' => 'Learn about our library policies, rules, and guidelines.',
+                'policies' => $policies,
+                'categories' => $categories
+            ];
+            
+            // Render the view
+            $this->render('policies', $data);
+
+        } catch (\Exception $e) {
+            error_log("Error in PageController->policies(): " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $this->render('errors/500', [
+                'pageTitle' => 'Error - ' . SITE_NAME,
+                'error' => DISPLAY_ERRORS ? $e->getMessage() : 'Failed to load the Policies page.'
+            ]);
+        }
+    }
+
+    /**
      * Library information page
      */
     public function library() {

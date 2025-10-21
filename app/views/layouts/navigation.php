@@ -87,6 +87,14 @@
                     </a>
                 </li>
 
+                                <!-- Policies -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASE_URL ?>/policies">
+                        <i class="bi bi-clipboard-check"></i> Policies
+                    </a>
+                </li>
+
+
                 <!-- FAQ -->
                 <li class="nav-item">
                     <a class="nav-link" href="<?= BASE_URL ?>/faq">
