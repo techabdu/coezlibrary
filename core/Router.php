@@ -47,7 +47,9 @@ class Router {
         'about/staff' => ['controller' => 'Page', 'action' => 'staff'],
         'services' => ['controller' => 'Page', 'action' => 'services'],
         'policies' => ['controller' => 'Page', 'action' => 'policies'],
-        'databases' => ['controller' => 'Resource', 'action' => 'databases']
+        'databases' => ['controller' => 'Resource', 'action' => 'databases'],
+        'ebooks' => ['controller' => 'Resources', 'action' => 'ebooks'],
+        'ejournals' => ['controller' => 'Resources', 'action' => 'ejournals']
     ];
 
     /**
