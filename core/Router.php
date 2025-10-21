@@ -48,6 +48,8 @@ class Router {
         'services' => ['controller' => 'Page', 'action' => 'services'],
         'policies' => ['controller' => 'Page', 'action' => 'policies'],
         'faq' => ['controller' => 'Page', 'action' => 'faq'],
+        'contact' => ['controller' => 'Contact', 'action' => 'index'],
+        'contact/submit' => ['controller' => 'Contact', 'action' => 'submit'],
         'databases' => ['controller' => 'Resource', 'action' => 'databases'],
         'ebooks' => ['controller' => 'Resources', 'action' => 'ebooks'],
         'ejournals' => ['controller' => 'Resources', 'action' => 'ejournals']
