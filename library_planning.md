@@ -405,14 +405,6 @@ library-website/
 - [ ] Add breadcrumb navigation
 - [ ] **Git commit:** "Step 4.4: Implemented Library Policies page with accordions"
 
-#### Step 4.5: Seed Static Pages Content
-- [ ] Insert initial content into `static_pages` table:
-  - about-us page content
-  - services page content
-  - policies page content
-- [ ] Write SQL insert statements or create seed script
-- [ ] Test all static pages display correct content
-- [ ] **Git commit:** "Step 4.5: Seeded static pages with initial content"
 
 **🔍 CHECKPOINT 4:** All static pages (About, Services, Policies) should render correctly
 
@@ -456,7 +448,7 @@ library-website/
 - [ ] Test that all links display correctly
 - [ ] **Git commit:** "Step 5.3: Seeded databases table with sample data"
 
-#### Step 5.4: Add Category Filtering (Optional Enhancement)
+#### Step 5.4: Add Category Filtering
 - [ ] Add category tabs/pills at top of databases page
 - [ ] JavaScript to filter cards by category without page reload
 - [ ] Or implement server-side filtering with URL parameters

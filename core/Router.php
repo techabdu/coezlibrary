@@ -46,7 +46,8 @@ class Router {
         'about/librarian' => ['controller' => 'Page', 'action' => 'librarian'],
         'about/staff' => ['controller' => 'Page', 'action' => 'staff'],
         'services' => ['controller' => 'Page', 'action' => 'services'],
-        'policies' => ['controller' => 'Page', 'action' => 'policies']
+        'policies' => ['controller' => 'Page', 'action' => 'policies'],
+        'databases' => ['controller' => 'Resource', 'action' => 'databases']
     ];
 
     /**
