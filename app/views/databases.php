@@ -26,6 +26,23 @@
 <section class="databases-section py-5">
     <div class="container">
         <?php if (!empty($databases)): ?>
+            <!-- Category Filter -->
+            <div class="category-filter mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <h2 class="h5 mb-0 me-3">Filter by Category:</h2>
+                    <div class="nav nav-pills">
+                        <button class="nav-link active" data-category="all">All</button>
+                        <?php if (!empty($categories)): ?>
+                            <?php foreach ($categories as $category): ?>
+                                <button class="nav-link" data-category="<?= htmlspecialchars($category) ?>">
+                                    <?= htmlspecialchars($category) ?>
+                                </button>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
             <!-- Databases Grid -->
             <div class="row g-4">
                 <?php foreach ($databases as $database): ?>
@@ -83,4 +100,15 @@
     background: linear-gradient(rgba(0, 100, 0, 1), rgba(0, 100, 0, 1)), url("<?= BASE_URL ?>/public/images/carousel/default-library.jpg") center/cover no-repeat;
     color: white;
 }
+
+.shadow-hover {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
 </style>
+
+<!-- Database filtering script -->
+<script src="<?= BASE_URL ?>/public/js/databases.js"></script>

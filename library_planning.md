@@ -534,7 +534,7 @@ library-website/
 - [ ] Create `app/views/faq.php`
 - [ ] Page structure:
   - Page title "Frequently Asked Questions"
-  - Optional category tabs (General, Borrowing, Digital Resources, etc.)
+  - category tabs (General, Borrowing, Digital Resources, etc.)
   - Bootstrap accordion for questions
 - [ ] Each FAQ item in accordion:
   - Question as accordion header
@@ -544,11 +544,9 @@ library-website/
 
 #### Step 7.3: Seed FAQ Data
 - [ ] Insert sample FAQs into `faq` table:
-  - "How do I access the library databases?" → Answer about login/access
   - "What are the library hours?" → Answer with hours
-  - "How do I download e-books?" → Step-by-step guide
+  - "How do I download e-books?" → you cant download the e-books but you can read them
   - "What are the fines for late returns?" → Fines info
-  - "Can I request a book purchase?" → Process description
   - Add 10-15 common questions
 - [ ] Categorize FAQs appropriately
 - [ ] Test FAQ page displays all questions
@@ -611,7 +609,7 @@ library-website/
   - Success message: "Your message has been sent! We'll respond within 24 hours."
   - Error messages for validation failures
 - [ ] Display messages with Bootstrap alerts
-- [ ] Auto-dismiss after few seconds (optional JavaScript)
+- [ ] Auto-dismiss after few seconds (JavaScript)
 - [ ] Test both success and error scenarios
 - [ ] **Git commit:** "Step 8.4: Added flash messaging for form feedback"
 
