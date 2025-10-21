@@ -53,8 +53,7 @@ class Router {
      * @var array
      */
     private $staticPages = [
-        'services' => 'services',
-        'policies' => 'policies'
+        'services' => 'services'
     ];
 
     public function __construct() {

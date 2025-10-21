@@ -176,8 +176,4 @@ INSERT INTO static_pages (page_name, slug, content) VALUES
     </div>
 </div>');
 
--- Policies page content
-INSERT INTO static_pages (page_name, slug, content) VALUES 
-('Library Policies', 'library-policies', '<div class="policies-overview mb-5">
-    <p class="lead">Our library policies are designed to ensure a productive and welcoming environment for all users. Please familiarize yourself with these guidelines to make the most of our resources and services.</p>
-</div>');
+
