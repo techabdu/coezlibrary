@@ -198,7 +198,7 @@
 <!-- Page Specific Styles -->
 <style>
 .hero-section {
-    background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url("<?= BASE_URL ?>/public/images/carousel/default-library.jpg") center/cover no-repeat;
+    background: linear-gradient(rgba(0, 100, 0, 1), rgba(0, 100, 0, 1)), url("<?= BASE_URL ?>/public/images/carousel/default-library.jpg") center/cover no-repeat;
 }
 
 .staff-card {

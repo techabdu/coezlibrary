@@ -130,6 +130,10 @@
 
 <!-- Page Specific Styles -->
 <style>
+.hero-section {
+    background: linear-gradient(rgba(0, 100, 0, 1), rgba(0, 100, 0, 1)), url("<?= BASE_URL ?>/public/images/carousel/default-library.jpg") center/cover no-repeat;
+}
+
 .profile-card {
     border: none;
     box-shadow: var(--shadow-sm);

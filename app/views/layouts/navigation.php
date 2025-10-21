@@ -4,7 +4,7 @@
  * This file contains the main navigation bar that appears on all pages
  */
 ?>
-<header class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
+<header class="navbar navbar-expand-lg  sticky-top shadow-sm">
     <div class="container">
         <!-- Logo/Brand -->
         <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/">
