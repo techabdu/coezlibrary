@@ -12,6 +12,7 @@ use App\Models\CollegeInfo;
 use App\Models\LibrarianInfo;
 use App\Models\StaffMember;
 use App\Models\Service;
+use App\Models\FAQ;
 
 class PageController extends Controller {
     /**
@@ -81,6 +82,47 @@ class PageController extends Controller {
             $this->render('errors/500', [
                 'pageTitle' => 'Error - ' . SITE_NAME,
                 'error' => DISPLAY_ERRORS ? $e->getMessage() : 'Failed to load the College information page.'
+            ]);
+        }
+    }
+
+    /**
+     * Display the FAQ page
+     */
+    public function faq() {
+        try {
+            // Create FAQ model instance and get data
+            $faqModel = new FAQ();
+            $faqs = $faqModel->getAllFAQs();
+            $categories = $faqModel->getAllCategories();
+
+            // Group FAQs by category
+            $faqsByCategory = [];
+            foreach ($faqs as $faq) {
+                $category = $faq['category'];
+                if (!isset($faqsByCategory[$category])) {
+                    $faqsByCategory[$category] = [];
+                }
+                $faqsByCategory[$category][] = $faq;
+            }
+
+            // Prepare view data
+            $data = [
+                'pageTitle' => 'Frequently Asked Questions - ' . SITE_NAME,
+                'metaDescription' => 'Find answers to commonly asked questions about our library services.',
+                'categories' => $categories,
+                'faqsByCategory' => $faqsByCategory
+            ];
+            
+            // Render the view
+            $this->render('faq', $data);
+
+        } catch (\Exception $e) {
+            error_log("Error in PageController->faq(): " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $this->render('errors/500', [
+                'pageTitle' => 'Error - ' . SITE_NAME,
+                'error' => DISPLAY_ERRORS ? $e->getMessage() : 'Failed to load the FAQ page.'
             ]);
         }
     }
