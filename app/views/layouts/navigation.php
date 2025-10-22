@@ -8,8 +8,10 @@
     <div class="container">
         <!-- Logo/Brand -->
         <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>/">
-            <i class="bi bi-book me-2"></i>
-            <?= SITE_NAME ?>
+            <img src="<?= BASE_URL ?>/public/images/school-logo.png" 
+                 alt="School Logo" 
+                 class="school-logo me-2">
+            <span><?= SITE_NAME ?></span>
         </a>
 
         <!-- Mobile Toggle Button -->
