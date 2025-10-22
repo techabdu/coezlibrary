@@ -3,13 +3,16 @@ namespace App\Controllers;
 
 use Core\Controller;
 use App\Models\User;
+use App\Models\Dashboard;
 
 class AdminController extends Controller {
     private $userModel;
+    private $dashboardModel;
 
     public function __construct() {
         parent::__construct();
         $this->userModel = new User();
+        $this->dashboardModel = new Dashboard();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -97,14 +100,42 @@ class AdminController extends Controller {
      * Display admin dashboard
      */
     public function dashboard() {
-        $data = [
-            'pageTitle' => 'Admin Dashboard - ' . SITE_NAME,
-            'username' => $_SESSION['username'],
-            'currentPage' => 'dashboard',
-            'layout' => 'admin'
-        ];
+        try {
+            // Get dashboard stats
+            $stats = $this->dashboardModel->getStats();
+            
+            // Get recent activity
+            $recentActivity = $this->dashboardModel->getRecentActivity(5);
 
-        $this->render('admin/dashboard', $data);
+            $data = [
+                'pageTitle' => 'Admin Dashboard - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'dashboard',
+                'layout' => 'admin',
+                'stats' => $stats,
+                'recentActivity' => $recentActivity
+            ];
+
+            $this->render('admin/dashboard', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->dashboard(): " . $e->getMessage());
+            $data = [
+                'pageTitle' => 'Admin Dashboard - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'dashboard',
+                'layout' => 'admin',
+                'stats' => [
+                    'announcements' => 0,
+                    'pending_contacts' => 0,
+                    'ebooks' => 0,
+                    'ejournals' => 0,
+                    'databases' => 0
+                ],
+                'recentActivity' => [],
+                'error' => 'An error occurred while loading the dashboard.'
+            ];
+            $this->render('admin/dashboard', $data);
+        }
     }
 
     /**
