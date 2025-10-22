@@ -64,6 +64,11 @@ class Controller {
         // Include header
         require_once APP_PATH . $layoutPath . '/header.php';
         
+        // Include sidebar for admin layout
+        if ($layout === 'admin') {
+            require_once APP_PATH . '/views/layouts/admin/sidebar.php';
+        }
+        
         // Include the view file
         $viewFile = APP_PATH . '/views/' . $view . '.php';
         if (!file_exists($viewFile)) {

@@ -46,3 +46,7 @@
             </div>
         </div>
     </nav>
+
+    <!-- Admin Content Wrapper -->
+    <div class="admin-wrapper">
+        <!-- Sidebar will be included here -->
