@@ -57,8 +57,12 @@ class Controller {
         // Start output buffering
         ob_start();
         
+        // Determine which layout to use
+        $layout = $this->viewData['layout'] ?? 'default';
+        $layoutPath = $layout === 'admin' ? '/views/layouts/admin' : '/views/layouts';
+        
         // Include header
-        require_once APP_PATH . '/views/layouts/header.php';
+        require_once APP_PATH . $layoutPath . '/header.php';
         
         // Include the view file
         $viewFile = APP_PATH . '/views/' . $view . '.php';
@@ -68,7 +72,7 @@ class Controller {
         require_once $viewFile;
         
         // Include footer
-        require_once APP_PATH . '/views/layouts/footer.php';
+        require_once APP_PATH . $layoutPath . '/footer.php';
         
         // Flush the output buffer
         ob_end_flush();

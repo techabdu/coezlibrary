@@ -4,15 +4,11 @@
  * This is a placeholder dashboard that will be expanded in later phases
  */
 ?>
-
-<!-- Include header -->
-<?php require_once __DIR__ . '/../layouts/admin/header.php'; ?>
-
 <!-- Dashboard Content -->
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <?php require_once __DIR__ . '/../layouts/admin/sidebar.php'; ?>
+        <?php include APP_PATH . '/views/layouts/admin/sidebar.php'; ?>
 
         <!-- Main Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -45,6 +41,3 @@
         </main>
     </div>
 </div>
-
-<!-- Include footer -->
-<?php require_once __DIR__ . '/../layouts/admin/footer.php'; ?>

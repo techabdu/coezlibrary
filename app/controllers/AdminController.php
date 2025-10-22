@@ -99,7 +99,9 @@ class AdminController extends Controller {
     public function dashboard() {
         $data = [
             'pageTitle' => 'Admin Dashboard - ' . SITE_NAME,
-            'username' => $_SESSION['username']
+            'username' => $_SESSION['username'],
+            'currentPage' => 'dashboard',
+            'layout' => 'admin'
         ];
 
         $this->render('admin/dashboard', $data);
