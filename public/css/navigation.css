@@ -1,7 +1,8 @@
 /* Navigation Styles */
 .navbar {
     padding: 0.5rem 1rem;
-    background-color: #ced4da;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .navbar-brand {
@@ -9,8 +10,20 @@
     font-weight: 600;
 }
 
-.navbar-brand i {
-    font-size: 1.6rem;
+.school-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Make logo smaller on mobile */
+@media (max-width: 576px) {
+    .school-logo {
+        height: 32px;
+    }
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
 }
 
 .nav-link {
@@ -96,23 +109,21 @@
     }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .navbar-light {
-        background-color: var(--primary-color) !important;
-    }
-    
-    .dropdown-menu {
-        background-color: var(--primary-color);
-        border-color: rgba(255,255,255,0.1);
-    }
-    
-    .dropdown-item {
-        color: var(--white);
-    }
-    
-    .dropdown-item:hover {
-        background-color: rgba(255,255,255,0.1);
-        color: var(--white);
-    }
+/* Navbar light theme */
+.navbar-light {
+    background-color: white;
+}
+
+.dropdown-menu {
+    background-color: white;
+    border-color: #eee;
+}
+
+.dropdown-item {
+    color: #333;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #000;
 }
