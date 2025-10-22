@@ -186,6 +186,10 @@ library-website/
 │           ├── manage_databases.php
 │           ├── manage_resources.php
 │           ├── manage_pages.php
+│           ├── manage_policies.php
+│           ├── manage_aboutPages.php
+│           ├── manage_services.php
+│           ├── manage_faq.php
 │           └── view_contacts.php
 ├── public/
 │   ├── css/

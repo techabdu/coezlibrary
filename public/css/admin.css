@@ -1,0 +1,91 @@
+/* Admin Panel Styles */
+
+/* Layout */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+.admin-sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+.admin-sidebar.collapsed {
+    margin-left: -250px;
+}
+
+.content-wrapper {
+    width: 100%;
+    padding: 20px;
+    min-height: calc(100vh - 56px); /* Subtract navbar height */
+}
+
+/* Sidebar Styles */
+.admin-sidebar .list-group-item {
+    background-color: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1.25rem;
+}
+
+.admin-sidebar .list-group-item:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar .list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+/* Dashboard Cards */
+.stats-card {
+    transition: transform 0.2s;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Tables */
+.table-responsive {
+    background: #fff;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Forms */
+.admin-form {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Flash Messages */
+.alert-dismissible {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1050;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        margin-left: -250px;
+    }
+    
+    .admin-sidebar.active {
+        margin-left: 0;
+    }
+    
+    #sidebarCollapse {
+        display: block;
+    }
+}
