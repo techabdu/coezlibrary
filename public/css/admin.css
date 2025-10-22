@@ -1,27 +1,37 @@
 /* Admin Panel Styles */
 
-/* Layout */
-.wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
-}
-
-.admin-sidebar {
-    min-width: 250px;
-    max-width: 250px;
+body {
     min-height: 100vh;
-    transition: all 0.3s;
+    padding-top: 56px; /* Height of navbar */
 }
 
-.admin-sidebar.collapsed {
-    margin-left: -250px;
+/* Navbar Customization */
+.navbar.fixed-top {
+    z-index: 1030; /* Highest z-index */
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
 }
 
-.content-wrapper {
-    width: 100%;
+/* Sidebar */
+.admin-sidebar {
+    position: fixed;
+    top: 56px; /* Height of navbar */
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background: #343a40;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    z-index: 1020; /* Below navbar */
+}
+
+/* Main Content Area */
+.admin-main {
+    margin-left: 250px;
     padding: 20px;
-    min-height: calc(100vh - 56px); /* Subtract navbar height */
+    min-height: calc(100vh - 56px);
+    background: #f8f9fa;
+    position: relative;
+    z-index: 1010; /* Below sidebar */
 }
 
 /* Sidebar Styles */
