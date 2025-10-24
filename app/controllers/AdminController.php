@@ -282,15 +282,15 @@ class AdminController extends Controller {
      */
     public function updateDatabase() {
         try {
-            $id = $_GET['id'] ?? null;
-            if (!$id) {
-                throw new \Exception('No database ID provided');
-            }
-
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 http_response_code(405);
                 header('Location: ' . BASE_URL . '/admin/manage-databases');
                 return;
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No database ID provided');
             }
 
             $data = [
@@ -307,13 +307,9 @@ class AdminController extends Controller {
         } catch (\InvalidArgumentException $e) {
             // Validation errors
             $this->setFlashMessage('error', $e->getMessage());
-            header('Location: ' . BASE_URL . "/admin/edit-database/$id");
-            return;
         } catch (\Exception $e) {
             error_log("Error in AdminController->updateDatabase(): " . $e->getMessage());
             $this->setFlashMessage('error', 'An error occurred while updating the database entry.');
-            header('Location: ' . BASE_URL . "/admin/edit-database/$id");
-            return;
         }
 
         header('Location: ' . BASE_URL . '/admin/manage-databases');
@@ -328,7 +324,7 @@ class AdminController extends Controller {
                 throw new \Exception('Invalid request method');
             }
 
-            $id = $_GET['id'] ?? null;
+            $id = $_POST['id'] ?? null;
             if (!$id) {
                 throw new \Exception('No database ID provided');
             }
