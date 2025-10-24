@@ -92,7 +92,7 @@ class Model {
     /**
      * Create a new record
      * @param array $data
-     * @return int Last insert ID
+     * @return int|false Last insert ID or false on failure
      */
     public function create(array $data): int {
         try {

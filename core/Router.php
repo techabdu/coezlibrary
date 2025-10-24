@@ -53,6 +53,14 @@ class Router {
         'databases' => ['controller' => 'Resource', 'action' => 'databases'],
         'ebooks' => ['controller' => 'Resources', 'action' => 'ebooks'],
         'ejournals' => ['controller' => 'Resources', 'action' => 'ejournals'],
+        // Admin Routes
+        'admin/announcements' => ['controller' => 'Admin', 'action' => 'manageAnnouncements'],
+        'admin/announcements/store' => ['controller' => 'Admin', 'action' => 'storeAnnouncement'],
+        'admin/announcements/get' => ['controller' => 'Admin', 'action' => 'getAnnouncement'],
+        'admin/announcements/update' => ['controller' => 'Admin', 'action' => 'updateAnnouncement'],
+        'admin/announcements/delete' => ['controller' => 'Admin', 'action' => 'deleteAnnouncement'],
+        'admin/announcements/toggle' => ['controller' => 'Admin', 'action' => 'toggleAnnouncementStatus'],
+        // Database Management Routes
         'admin/manage-databases' => ['controller' => 'Admin', 'action' => 'manageDatabases'],
         'admin/create-database' => ['controller' => 'Admin', 'action' => 'createDatabase'],
         'admin/edit-database' => ['controller' => 'Admin', 'action' => 'editDatabase'],
@@ -69,34 +77,51 @@ class Router {
 
     public function __construct() {
         $url = $this->parseUrl();
-        $path = is_array($url) ? implode('/', $url) : '';
+        if (!$url) {
+            $this->controller = $this->defaultController . 'Controller';
+            $this->action = $this->defaultAction;
+            return;
+        }
 
-        // Check custom routes first
-        if (!empty($path) && isset($this->customRoutes[$path])) {
-            $route = $this->customRoutes[$path];
-            $this->controller = $route['controller'] . 'Controller';
-            $this->action = $route['action'];
-            $this->params = [];
-            return;
+        // Build the base path for route matching
+        $basePath = '';
+        $urlCopy = $url;
+        $paramStartIndex = 0;
+
+        // Try to match incrementally longer paths
+        for ($i = 0; $i < count($urlCopy); $i++) {
+            if ($basePath !== '') {
+                $basePath .= '/';
+            }
+            $basePath .= $urlCopy[$i];
+            
+            if (isset($this->customRoutes[$basePath])) {
+                $route = $this->customRoutes[$basePath];
+                $this->controller = $route['controller'] . 'Controller';
+                $this->action = $route['action'];
+                $paramStartIndex = $i + 1;
+                break;
+            }
         }
-        
-        // Check if this is a static page route
-        if (isset($url[0]) && array_key_exists($url[0], $this->staticPages)) {
-            $this->controller = 'PageController';
-            $this->action = $this->staticPages[$url[0]];
-            array_shift($url);
+
+        // If no custom route found, use default routing
+        if (!isset($route)) {
+            if (array_key_exists($url[0], $this->staticPages)) {
+                $this->controller = 'PageController';
+                $this->action = $this->staticPages[$url[0]];
+                array_shift($url);
+            } else {
+                $this->controller = ucfirst($url[0]) . 'Controller';
+                array_shift($url);
+                
+                $this->action = isset($url[0]) ? $url[0] : $this->defaultAction;
+                array_shift($url);
+            }
             $this->params = $url;
-            return;
+        } else {
+            // For custom routes, collect remaining segments as parameters
+            $this->params = array_slice($urlCopy, $paramStartIndex);
         }
-        
-        // Default routing
-        $this->controller = isset($url[0]) ? ucfirst($url[0]) . 'Controller' : $this->defaultController . 'Controller';
-        array_shift($url);
-        
-        $this->action = isset($url[0]) ? $url[0] : $this->defaultAction;
-        array_shift($url);
-        
-        $this->params = $url ?? [];
     }
 
     /**
