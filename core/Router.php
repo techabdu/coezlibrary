@@ -54,13 +54,6 @@ class Router {
         'ebooks' => ['controller' => 'Resources', 'action' => 'ebooks'],
         'ejournals' => ['controller' => 'Resources', 'action' => 'ejournals'],
         // Admin Routes
-        'admin/announcements' => ['controller' => 'Admin', 'action' => 'manageAnnouncements'],
-        'admin/announcements/store' => ['controller' => 'Admin', 'action' => 'storeAnnouncement'],
-        'admin/announcements/get' => ['controller' => 'Admin', 'action' => 'getAnnouncement'],
-        'admin/announcements/update' => ['controller' => 'Admin', 'action' => 'updateAnnouncement'],
-        'admin/announcements/delete' => ['controller' => 'Admin', 'action' => 'deleteAnnouncement'],
-        'admin/announcements/toggle' => ['controller' => 'Admin', 'action' => 'toggleAnnouncementStatus'],
-        // Database Management Routes
         'admin/manage-databases' => ['controller' => 'Admin', 'action' => 'manageDatabases'],
         'admin/create-database' => ['controller' => 'Admin', 'action' => 'createDatabase'],
         'admin/edit-database' => ['controller' => 'Admin', 'action' => 'editDatabase'],
