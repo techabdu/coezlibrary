@@ -8,11 +8,13 @@ use App\Models\Dashboard;
 class AdminController extends Controller {
     private $userModel;
     private $dashboardModel;
+    private $databaseModel;
 
     public function __construct() {
         parent::__construct();
         $this->userModel = new User();
         $this->dashboardModel = new Dashboard();
+        $this->databaseModel = new \App\Models\Database();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -175,5 +177,65 @@ class AdminController extends Controller {
         $message = $_SESSION['flash_' . $type] ?? null;
         unset($_SESSION['flash_' . $type]);
         return $message;
+    }
+
+    /**
+     * Display database management page
+     */
+    public function manageDatabases() {
+        try {
+            $databases = $this->databaseModel->getAllDatabases();
+            $categories = $this->databaseModel->getAllCategories();
+
+            $data = [
+                'pageTitle' => 'Manage Databases - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_databases',
+                'layout' => 'admin',
+                'databases' => $databases,
+                'categories' => $categories,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_databases', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageDatabases(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the databases.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Create a new database entry
+     */
+    public function createDatabase() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-databases');
+                return;
+            }
+
+            $data = [
+                'name' => trim($_POST['name'] ?? ''),
+                'description' => trim($_POST['description'] ?? ''),
+                'url' => trim($_POST['url'] ?? ''),
+                'category' => trim($_POST['category'] ?? ''),
+                'icon_path' => null // Placeholder for future icon upload functionality
+            ];
+
+            $this->databaseModel->create($data);
+            $this->setFlashMessage('success', 'Database link added successfully.');
+
+        } catch (\InvalidArgumentException $e) {
+            // Validation errors
+            $this->setFlashMessage('error', $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->createDatabase(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while creating the database entry.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-databases');
     }
 }

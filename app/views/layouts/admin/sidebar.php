@@ -21,6 +21,10 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'announcements' ? 'active' : '' ?>">
             <i class="bi bi-megaphone me-2"></i>Announcements
         </a>
+        <a href="<?= BASE_URL ?>/admin/manage-databases" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_databases' ? 'active' : '' ?>">
+            <i class="bi bi-server me-2"></i>Manage Databases
+        </a>
         <a href="<?= BASE_URL ?>/admin/carousel" 
            class="list-group-item list-group-item-action <?= $currentPage === 'carousel' ? 'active' : '' ?>">
             <i class="bi bi-images me-2"></i>Carousel Images

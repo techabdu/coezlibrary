@@ -1,0 +1,159 @@
+<?php
+/**
+ * Admin - Manage Databases View
+ */
+
+// Include the admin header
+include APP_PATH . '/views/layouts/admin/header.php';
+?>
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <?php include APP_PATH . '/views/layouts/admin/sidebar.php'; ?>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Manage Databases</h1>
+    
+    <?php if (isset($success)): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?= $success ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= $error ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
+    <!-- Add New Database Button -->
+    <div class="mb-4">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDatabaseModal">
+            <i class="bi bi-plus-lg"></i> Add New Database
+        </button>
+    </div>
+
+    <!-- Databases Table -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-table me-1"></i>
+            External Databases
+        </div>
+        <div class="card-body">
+            <table id="databasesTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>URL</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($databases as $db): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($db['name']) ?></td>
+                            <td><?= htmlspecialchars($db['category'] ?? 'N/A') ?></td>
+                            <td>
+                                <a href="<?= htmlspecialchars($db['url']) ?>" target="_blank" rel="noopener noreferrer">
+                                    <?= htmlspecialchars($db['url']) ?>
+                                </a>
+                            </td>
+                            <td><?= htmlspecialchars($db['description'] ?? '') ?></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-database" data-id="<?= $db['id'] ?>">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger delete-database" data-id="<?= $db['id'] ?>">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Initialize DataTables -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize DataTable
+        const table = new DataTable('#databasesTable', {
+            order: [[0, 'asc']], // Sort by name by default
+            pageLength: 10,
+            responsive: true
+        });
+
+        // Handle delete button clicks
+        document.querySelectorAll('.delete-database').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this database?')) {
+                    window.location.href = `${BASE_URL}/admin/delete-database/${id}`;
+                }
+            });
+        });
+
+        // Handle edit button clicks
+        document.querySelectorAll('.edit-database').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                window.location.href = `${BASE_URL}/admin/edit-database/${id}`;
+            });
+        });
+    });
+</script>
+</div> <!-- Close admin-main div -->
+
+<!-- Add Database Modal -->
+<div class="modal fade" id="addDatabaseModal" tabindex="-1" aria-labelledby="addDatabaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addDatabaseModalLabel">Add New Database</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?= BASE_URL ?>/admin/create-database" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="url" class="form-label">URL *</label>
+                        <input type="url" class="form-control" id="url" name="url" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <input type="text" class="form-control" id="category" name="category" list="categories">
+                        <datalist id="categories">
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= htmlspecialchars($category) ?>">
+                            <?php endforeach; ?>
+                        </datalist>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Database</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php
+// Include the admin footer
+include APP_PATH . '/views/layouts/admin/footer.php';
+?>

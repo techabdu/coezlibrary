@@ -52,7 +52,11 @@ class Router {
         'contact/submit' => ['controller' => 'Contact', 'action' => 'submit'],
         'databases' => ['controller' => 'Resource', 'action' => 'databases'],
         'ebooks' => ['controller' => 'Resources', 'action' => 'ebooks'],
-        'ejournals' => ['controller' => 'Resources', 'action' => 'ejournals']
+        'ejournals' => ['controller' => 'Resources', 'action' => 'ejournals'],
+        'admin/manage-databases' => ['controller' => 'Admin', 'action' => 'manageDatabases'],
+        'admin/create-database' => ['controller' => 'Admin', 'action' => 'createDatabase'],
+        'admin/edit-database' => ['controller' => 'Admin', 'action' => 'editDatabase'],
+        'admin/delete-database' => ['controller' => 'Admin', 'action' => 'deleteDatabase']
     ];
 
     /**

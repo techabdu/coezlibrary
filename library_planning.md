@@ -787,8 +787,8 @@ library-website/
 - [ ] Create `app/views/admin/manage_databases.php`
 - [ ] Page structure:
   - "Add New Database" button
-  - Table of existing databases:
-    - Name, Category, URL, Actions (Edit, Delete)
+  - Table of existing databases: (check external_databases table for the table columns)
+    - Name, Category, URL, description, Actions (Edit, Delete)
 - [ ] Use Bootstrap table
 - [ ] **Git commit:** "Step 12.1: Created databases management page"
 
