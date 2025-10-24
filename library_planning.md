@@ -733,7 +733,7 @@ library-website/
 - [ ] Add manageAnnouncements() method to AdminController
 - [ ] Create `app/views/admin/manage_announcements.php`
 - [ ] Page structure:
-  - "Add New Announcement" button (opens modal)
+  - "Add New Announcement" button (opens new page)
   - Table/list of existing announcements:
     - Title, Date Posted, Status (Active/Inactive), Actions (Edit, Delete, Toggle Status)
 - [ ] Use Bootstrap table with action buttons
@@ -741,7 +741,7 @@ library-website/
 
 #### Step 11.2: Add Announcement Functionality
 - [ ] Add createAnnouncement() and storeAnnouncement() methods to AdminController
-- [ ] Create form (modal) with fields:
+- [ ] Create form (new page) with fields:
   - Title (required)
   - Content (textarea, required)
   - Date Posted (auto-populate with today's date)
