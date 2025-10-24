@@ -29,7 +29,7 @@ class PageController extends Controller {
         try {
             // Create policy model instance and get data
             $policyModel = new \App\Models\Policy();
-            $policies = $policyModel->getAllPolicies();
+            $policies = $policyModel->getAllActivePolicies();
             $categories = $policyModel->getAllCategories();
 
             // Prepare view data

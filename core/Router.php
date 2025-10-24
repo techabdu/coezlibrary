@@ -63,7 +63,12 @@ class Router {
         'admin/manage-announcements' => ['controller' => 'Admin', 'action' => 'manageAnnouncements'],
         'admin/create-announcement' => ['controller' => 'Admin', 'action' => 'createAnnouncement'],
         'admin/update-announcement' => ['controller' => 'Admin', 'action' => 'updateAnnouncement'],
-        'admin/delete-announcement' => ['controller' => 'Admin', 'action' => 'deleteAnnouncement']
+        'admin/delete-announcement' => ['controller' => 'Admin', 'action' => 'deleteAnnouncement'],
+        // Policy Routes
+        'admin/manage-policies' => ['controller' => 'Admin', 'action' => 'managePolicies'],
+        'admin/create-policy' => ['controller' => 'Admin', 'action' => 'createPolicy'],
+        'admin/update-policy' => ['controller' => 'Admin', 'action' => 'updatePolicy'],
+        'admin/delete-policy' => ['controller' => 'Admin', 'action' => 'deletePolicy']
     ];
 
     /**

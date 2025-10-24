@@ -10,18 +10,30 @@ use Core\Model;
 use PDO;
 
 class Policy extends Model {
-    /**
-     * Table name for this model
-     * @var string
-     */
     protected $table = 'policies';
 
+    public function __construct() {
+        parent::__construct();
+    }
+
+    /**
+     * Get all policies ordered by display order
+     *
+     * @return array Array of all policies
+     */
+    public function getAllPolicies() {
+        $sql = "SELECT * FROM policies ORDER BY display_order ASC";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     /**
      * Get all active policies ordered by display order and grouped by category
      *
      * @return array Array of policies grouped by category
      */
-    public function getAllPolicies() {
+    public function getAllActivePolicies() {
         $sql = "SELECT * FROM policies WHERE is_active = 1 ORDER BY category, display_order ASC";
         $stmt = $this->getDB()->prepare($sql);
         $stmt->execute();
@@ -32,6 +44,59 @@ class Policy extends Model {
             $policies[$policy['category']][] = $policy;
         }
         return $policies;
+    }
+
+    /**
+     * Create a new policy
+     *
+     * @param array $data Policy data
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public function create(array $data): int {
+        if (empty($data['title']) || empty($data['content']) || empty($data['category'])) {
+            throw new \InvalidArgumentException('Title, content, and category are required');
+        }
+
+        return parent::create([
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'category' => $data['category'],
+            'display_order' => $data['display_order'] ?? 0,
+            'is_active' => isset($data['is_active']) ? 1 : 0
+        ]);
+    }
+
+    /**
+     * Update an existing policy
+     *
+     * @param int $id Policy ID
+     * @param array $data Updated policy data
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public function update(int $id, array $data): bool {
+        if (empty($data['title']) || empty($data['content']) || empty($data['category'])) {
+            throw new \InvalidArgumentException('Title, content, and category are required');
+        }
+
+        return parent::update($id, [
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'category' => $data['category'],
+            'display_order' => $data['display_order'] ?? 0,
+            'is_active' => isset($data['is_active']) ? 1 : 0
+        ]);
+    }
+
+    /**
+     * Delete a policy
+     *
+     * @param int $id Policy ID
+     * @return bool
+     */
+    public function delete(int $id): bool {
+        return parent::delete($id);
     }
 
     /**

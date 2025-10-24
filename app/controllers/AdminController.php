@@ -10,6 +10,7 @@ class AdminController extends Controller {
     private $dashboardModel;
     private $databaseModel;
     private $announcementModel;
+    private $policyModel;
 
     public function __construct() {
         parent::__construct();
@@ -17,6 +18,7 @@ class AdminController extends Controller {
         $this->dashboardModel = new Dashboard();
         $this->databaseModel = new \App\Models\Database();
         $this->announcementModel = new \App\Models\Announcement();
+        $this->policyModel = new \App\Models\Policy();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -471,5 +473,136 @@ class AdminController extends Controller {
         }
 
         header('Location: ' . BASE_URL . '/admin/manage-announcements');
+    }
+
+    /**
+     * Display policies management page
+     */
+    public function managePolicies() {
+        try {
+            $policies = $this->policyModel->getAllPolicies();
+            $categories = $this->policyModel->getAllCategories();
+
+            $data = [
+                'pageTitle' => 'Manage Policies - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_policies',
+                'layout' => 'admin',
+                'policies' => $policies,
+                'categories' => $categories,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_policies', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->managePolicies(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the policies.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Create a new policy
+     */
+    public function createPolicy() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-policies');
+                return;
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'content' => trim($_POST['content'] ?? ''),
+                'category' => trim($_POST['category'] ?? ''),
+                'display_order' => intval($_POST['display_order'] ?? 0),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            $policyModel = new \App\Models\Policy();
+            $policyModel->create($data);
+            $this->setFlashMessage('success', 'Policy added successfully.');
+
+        } catch (\InvalidArgumentException $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->createPolicy(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while creating the policy.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-policies');
+    }
+
+    /**
+     * Update an existing policy
+     */
+    public function updatePolicy() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-policies');
+                return;
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No policy ID provided');
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'content' => trim($_POST['content'] ?? ''),
+                'category' => trim($_POST['category'] ?? ''),
+                'display_order' => intval($_POST['display_order'] ?? 0),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            $policyModel = new \App\Models\Policy();
+            $policyModel->update($id, $data);
+            $this->setFlashMessage('success', 'Policy updated successfully.');
+
+        } catch (\InvalidArgumentException $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updatePolicy(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while updating the policy.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-policies');
+    }
+
+    /**
+     * Delete a policy
+     */
+    public function deletePolicy() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No policy ID provided');
+            }
+
+            // Check if policy exists
+            $policyModel = new \App\Models\Policy();
+            $policy = $policyModel->getPolicyById($id);
+            if (!$policy) {
+                throw new \Exception('Policy not found');
+            }
+
+            // Delete the policy
+            $policyModel->delete($id);
+            $this->setFlashMessage('success', 'Policy deleted successfully.');
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->deletePolicy(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while deleting the policy: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-policies');
     }
 }
