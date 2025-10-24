@@ -13,6 +13,10 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'dashboard' ? 'active' : '' ?>">
             <i class="bi bi-speedometer2 me-2"></i>Dashboard
         </a>
+        <a href="<?= BASE_URL ?>/admin/manage-announcements" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_announcements' ? 'active' : '' ?>">
+            <i class="bi bi-megaphone me-2"></i>Manage Announcements
+        </a>
         <a href="<?= BASE_URL ?>/admin/pages" 
            class="list-group-item list-group-item-action <?= $currentPage === 'pages' ? 'active' : '' ?>">
             <i class="bi bi-file-text me-2"></i>Pages

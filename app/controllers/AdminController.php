@@ -9,12 +9,14 @@ class AdminController extends Controller {
     private $userModel;
     private $dashboardModel;
     private $databaseModel;
+    private $announcementModel;
 
     public function __construct() {
         parent::__construct();
         $this->userModel = new User();
         $this->dashboardModel = new Dashboard();
         $this->databaseModel = new \App\Models\Database();
+        $this->announcementModel = new \App\Models\Announcement();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -345,5 +347,129 @@ class AdminController extends Controller {
         }
 
         header('Location: ' . BASE_URL . '/admin/manage-databases');
+    }
+
+    /**
+     * Display announcement management page
+     */
+    public function manageAnnouncements() {
+        try {
+            $announcements = $this->announcementModel->getAllAnnouncements();
+
+            $data = [
+                'pageTitle' => 'Manage Announcements - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_announcements',
+                'layout' => 'admin',
+                'announcements' => $announcements,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_announcements', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageAnnouncements(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the announcements.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Create a new announcement
+     */
+    public function createAnnouncement() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-announcements');
+                return;
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'content' => trim($_POST['content'] ?? ''),
+                'date_posted' => $_POST['date_posted'] ?? date('Y-m-d'),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            $this->announcementModel->create($data);
+            $this->setFlashMessage('success', 'Announcement added successfully.');
+
+        } catch (\InvalidArgumentException $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->createAnnouncement(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while creating the announcement.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-announcements');
+    }
+
+    /**
+     * Update an existing announcement
+     */
+    public function updateAnnouncement() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-announcements');
+                return;
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No announcement ID provided');
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'content' => trim($_POST['content'] ?? ''),
+                'date_posted' => $_POST['date_posted'] ?? date('Y-m-d'),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            $this->announcementModel->update($id, $data);
+            $this->setFlashMessage('success', 'Announcement updated successfully.');
+
+        } catch (\InvalidArgumentException $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateAnnouncement(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while updating the announcement.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-announcements');
+    }
+
+    /**
+     * Delete an announcement
+     */
+    public function deleteAnnouncement() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No announcement ID provided');
+            }
+
+            // Check if announcement exists
+            $announcement = $this->announcementModel->getById($id);
+            if (!$announcement) {
+                throw new \Exception('Announcement not found');
+            }
+
+            // Delete the announcement
+            $this->announcementModel->delete($id);
+            $this->setFlashMessage('success', 'Announcement deleted successfully.');
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->deleteAnnouncement(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while deleting the announcement: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-announcements');
     }
 }

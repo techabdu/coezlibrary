@@ -58,7 +58,12 @@ class Router {
         'admin/create-database' => ['controller' => 'Admin', 'action' => 'createDatabase'],
         'admin/edit-database' => ['controller' => 'Admin', 'action' => 'editDatabase'],
         'admin/update-database' => ['controller' => 'Admin', 'action' => 'updateDatabase'],
-        'admin/delete-database' => ['controller' => 'Admin', 'action' => 'deleteDatabase']
+        'admin/delete-database' => ['controller' => 'Admin', 'action' => 'deleteDatabase'],
+        // Announcement Routes
+        'admin/manage-announcements' => ['controller' => 'Admin', 'action' => 'manageAnnouncements'],
+        'admin/create-announcement' => ['controller' => 'Admin', 'action' => 'createAnnouncement'],
+        'admin/update-announcement' => ['controller' => 'Admin', 'action' => 'updateAnnouncement'],
+        'admin/delete-announcement' => ['controller' => 'Admin', 'action' => 'deleteAnnouncement']
     ];
 
     /**
