@@ -68,7 +68,12 @@ class Router {
         'admin/manage-policies' => ['controller' => 'Admin', 'action' => 'managePolicies'],
         'admin/create-policy' => ['controller' => 'Admin', 'action' => 'createPolicy'],
         'admin/update-policy' => ['controller' => 'Admin', 'action' => 'updatePolicy'],
-        'admin/delete-policy' => ['controller' => 'Admin', 'action' => 'deletePolicy']
+        'admin/delete-policy' => ['controller' => 'Admin', 'action' => 'deletePolicy'],
+        // Service Routes
+        'admin/manage-services' => ['controller' => 'Admin', 'action' => 'manageServices'],
+        'admin/create-service' => ['controller' => 'Admin', 'action' => 'createService'],
+        'admin/update-service' => ['controller' => 'Admin', 'action' => 'updateService'],
+        'admin/delete-service' => ['controller' => 'Admin', 'action' => 'deleteService']
     ];
 
     /**

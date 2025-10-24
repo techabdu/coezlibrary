@@ -34,9 +34,9 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'carousel' ? 'active' : '' ?>">
             <i class="bi bi-images me-2"></i>Carousel Images
         </a>
-        <a href="<?= BASE_URL ?>/admin/services" 
-           class="list-group-item list-group-item-action <?= $currentPage === 'services' ? 'active' : '' ?>">
-            <i class="bi bi-gear me-2"></i>Services
+        <a href="<?= BASE_URL ?>/admin/manage-services" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_services' ? 'active' : '' ?>">
+            <i class="bi bi-gear me-2"></i>Manage Services
         </a>
         <a href="<?= BASE_URL ?>/admin/staff" 
            class="list-group-item list-group-item-action <?= $currentPage === 'staff' ? 'active' : '' ?>">
