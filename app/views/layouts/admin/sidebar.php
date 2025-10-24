@@ -17,10 +17,7 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'pages' ? 'active' : '' ?>">
             <i class="bi bi-file-text me-2"></i>Pages
         </a>
-        <a href="<?= BASE_URL ?>/admin/announcements" 
-           class="list-group-item list-group-item-action <?= $currentPage === 'announcements' ? 'active' : '' ?>">
-            <i class="bi bi-megaphone me-2"></i>Announcements
-        </a>
+
         <a href="<?= BASE_URL ?>/admin/manage-databases" 
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_databases' ? 'active' : '' ?>">
             <i class="bi bi-server me-2"></i>Manage Databases

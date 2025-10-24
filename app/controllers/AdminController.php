@@ -4,188 +4,22 @@ namespace App\Controllers;
 use Core\Controller;
 use App\Models\User;
 use App\Models\Dashboard;
-use App\Models\Announcement;
 
 class AdminController extends Controller {
     private $userModel;
     private $dashboardModel;
-    private $announcementModel;
     private $databaseModel;
 
     public function __construct() {
         parent::__construct();
         $this->userModel = new User();
         $this->dashboardModel = new Dashboard();
-        $this->announcementModel = new Announcement();
         $this->databaseModel = new \App\Models\Database();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
         if ($action !== 'admin/login' && $action !== 'admin/authenticate') {
             $this->requireAuth();
-        }
-    }
-
-    /**
-     * Manage announcements
-     */
-    public function manageAnnouncements() {
-        try {
-            $announcements = $this->announcementModel->getAllAnnouncements();
-
-            $data = [
-                'pageTitle' => 'Manage Announcements - ' . SITE_NAME,
-                'username' => $_SESSION['username'],
-                'currentPage' => 'announcements',
-                'layout' => 'admin',
-                'announcements' => $announcements
-            ];
-
-            // Get flash messages if any
-            $data['error'] = $this->getFlashMessage('error');
-            $data['success'] = $this->getFlashMessage('success');
-
-            $this->render('admin/manage_announcements', $data);
-        } catch (\Exception $e) {
-            error_log("Error in AdminController->manageAnnouncements(): " . $e->getMessage());
-            $this->setFlashMessage('error', 'An error occurred while loading announcements.');
-            $this->redirect('/admin/dashboard');
-        }
-    }
-
-        /**
-     * Store a new announcement
-     */
-    public function storeAnnouncement() {
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new \Exception('Invalid request method');
-            }
-
-            // Get and sanitize inputs
-            $title = filter_var(trim($_POST['title'] ?? ''), FILTER_SANITIZE_STRING);
-            $content = filter_var(trim($_POST['content'] ?? ''), FILTER_SANITIZE_STRING);
-            $datePosted = filter_var(trim($_POST['date_posted'] ?? ''), FILTER_SANITIZE_STRING);
-            $isActive = isset($_POST['is_active']) ? 1 : 0;
-
-            // Validate inputs
-            if (empty($title) || empty($content) || empty($datePosted)) {
-                throw new \Exception('Please fill in all required fields');
-            }
-
-            // Validate date format
-            if (!strtotime($datePosted)) {
-                throw new \Exception('Invalid date format');
-            }
-
-            // Create announcement
-            $data = [
-                'title' => $title,
-                'content' => $content,
-                'date_posted' => $datePosted,
-                'is_active' => $isActive
-            ];
-
-            $result = $this->announcementModel->create($data);
-            if (!$result) {
-                throw new \Exception('Failed to create announcement');
-            }
-
-            $this->setFlashMessage('success', 'Announcement created successfully');
-
-        } catch (\Exception $e) {
-            error_log("Error in AdminController->storeAnnouncement(): " . $e->getMessage());
-            $this->setFlashMessage('error', 'Error creating announcement: ' . $e->getMessage());
-        }
-
-        $this->redirect('/admin/announcements');
-    }
-
-    /**
-     * Get announcement data for editing
-     */
-    public function getAnnouncement($id) {
-        try {
-            $announcement = $this->announcementModel->getById($id);
-            if (!$announcement) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Announcement not found']);
-                return;
-            }
-
-            echo json_encode($announcement);
-
-        } catch (\Exception $e) {
-            error_log("Error in AdminController->getAnnouncement(): " . $e->getMessage());
-            http_response_code(500);
-            echo json_encode(['error' => 'Error fetching announcement']);
-        }
-    }
-
-    /**
-     * Update an existing announcement
-     */
-    public function updateAnnouncement($id) {
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new \Exception('Invalid request method');
-            }
-
-            // Validate and sanitize inputs
-            $title = trim($_POST['title'] ?? '');
-            $content = trim($_POST['content'] ?? '');
-            $datePosted = trim($_POST['date_posted'] ?? '');
-            $isActive = isset($_POST['is_active']) ? 1 : 0;
-
-            if (empty($title) || empty($content) || empty($datePosted)) {
-                throw new \Exception('Please fill in all required fields');
-            }
-
-            // Update announcement
-            $data = [
-                'title' => $title,
-                'content' => $content,
-                'date_posted' => $datePosted,
-                'is_active' => $isActive
-            ];
-
-            $this->announcementModel->update($id, $data);
-            $this->setFlashMessage('success', 'Announcement updated successfully');
-
-        } catch (\Exception $e) {
-            error_log("Error in AdminController->updateAnnouncement(): " . $e->getMessage());
-            $this->setFlashMessage('error', 'Error updating announcement: ' . $e->getMessage());
-        }
-
-        $this->redirect('/admin/announcements');
-    }
-
-    /**
-     * Delete an announcement
-     */
-    public function deleteAnnouncement($id) {
-        try {
-            $this->announcementModel->delete($id);
-            $this->setFlashMessage('success', 'Announcement deleted successfully');
-        } catch (\Exception $e) {
-            error_log("Error in AdminController->deleteAnnouncement(): " . $e->getMessage());
-            $this->setFlashMessage('error', 'Error deleting announcement');
-        }
-
-        $this->redirect('/admin/announcements');
-    }
-
-    /**
-     * Toggle announcement active status
-     */
-    public function toggleAnnouncementStatus($id) {
-        try {
-            $this->announcementModel->toggleStatus($id);
-            echo json_encode(['success' => true]);
-        } catch (\Exception $e) {
-            error_log("Error in AdminController->toggleAnnouncementStatus(): " . $e->getMessage());
-            http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Error toggling announcement status']);
         }
     }
 
@@ -293,7 +127,6 @@ class AdminController extends Controller {
                 'currentPage' => 'dashboard',
                 'layout' => 'admin',
                 'stats' => [
-                    'announcements' => 0,
                     'pending_contacts' => 0,
                     'ebooks' => 0,
                     'ejournals' => 0,
