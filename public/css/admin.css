@@ -97,10 +97,22 @@ body {
     z-index: 1050;
 }
 
-/* Layout Fixes */
-.d-flex {
+/* Layout Fixes (scoped for admin area) */
+/* Avoid overriding Bootstrap's global .d-flex class. Use a scoped wrapper for the admin layout. */
+.admin-wrapper {
+    display: flex;
     min-height: 100vh;
     width: 100%;
+}
+
+/* Icon helper for dashboard stat cards */
+.icon-shape {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 0.5rem;
 }
 
 /* Media Queries */
