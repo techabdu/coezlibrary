@@ -9,13 +9,24 @@ class Dashboard extends Model {
      * @return array Array of statistics
      */
     public function getStats(): array {
+        $stats = [
+            'pending_contacts' => 0,
+            'ebooks' => 0,
+            'ejournals' => 0,
+            'databases' => 0
+        ];
+
         try {
             // Get contact submissions count
             $contactsSql = "SELECT COUNT(*) as count FROM contact_submissions WHERE status = 'pending'";
             $contactsStmt = $this->db->prepare($contactsSql);
             $contactsStmt->execute();
-            $pendingContacts = $contactsStmt->fetch(\PDO::FETCH_ASSOC)['count'];
+            $stats['pending_contacts'] = $contactsStmt->fetch(\PDO::FETCH_ASSOC)['count'];
+        } catch (\PDOException $e) {
+            error_log("Error fetching contact submissions count: " . $e->getMessage());
+        }
 
+        try {
             // Get digital resources count
             $resourcesSql = "SELECT 
                 SUM(CASE WHEN category = 'ebook' THEN 1 ELSE 0 END) as ebooks,
@@ -24,29 +35,23 @@ class Dashboard extends Model {
             $resourcesStmt = $this->db->prepare($resourcesSql);
             $resourcesStmt->execute();
             $resources = $resourcesStmt->fetch(\PDO::FETCH_ASSOC);
+            $stats['ebooks'] = $resources['ebooks'] ?? 0;
+            $stats['ejournals'] = $resources['ejournals'] ?? 0;
+        } catch (\PDOException $e) {
+            error_log("Error fetching digital resources count: " . $e->getMessage());
+        }
 
+        try {
             // Get total databases count
-            $databasesSql = "SELECT COUNT(*) as count FROM databases";
+            $databasesSql = "SELECT COUNT(*) as count FROM external_databases";
             $databasesStmt = $this->db->prepare($databasesSql);
             $databasesStmt->execute();
-            $databases = $databasesStmt->fetch(\PDO::FETCH_ASSOC)['count'];
-
-            return [
-                'pending_contacts' => $pendingContacts,
-                'ebooks' => $resources['ebooks'] ?? 0,
-                'ejournals' => $resources['ejournals'] ?? 0,
-                'databases' => $databases
-            ];
+            $stats['databases'] = $databasesStmt->fetch(\PDO::FETCH_ASSOC)['count'];
         } catch (\PDOException $e) {
-            // Log error and return empty stats
-            error_log("Error fetching dashboard stats: " . $e->getMessage());
-            return [
-                'pending_contacts' => 0,
-                'ebooks' => 0,
-                'ejournals' => 0,
-                'databases' => 0
-            ];
+            error_log("Error fetching databases count: " . $e->getMessage());
         }
+
+        return $stats;
     }
 
     /**

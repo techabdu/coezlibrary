@@ -96,7 +96,12 @@ include APP_PATH . '/views/layouts/admin/header.php';
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 if (confirm('Are you sure you want to delete this database?')) {
-                    window.location.href = `${BASE_URL}/admin/delete-database/${id}`;
+                    // Create and submit a form to send a POST request
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `${BASE_URL}/admin/delete-database?id=${id}`;
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             });
         });
@@ -105,7 +110,7 @@ include APP_PATH . '/views/layouts/admin/header.php';
         document.querySelectorAll('.edit-database').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-                window.location.href = `${BASE_URL}/admin/edit-database/${id}`;
+                window.location.href = `${BASE_URL}/admin/edit-database?id=${id}`;
             });
         });
     });

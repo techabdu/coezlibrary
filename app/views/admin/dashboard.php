@@ -23,24 +23,6 @@
 
     <!-- Quick Stats -->
     <div class="row g-4 py-3">
-        <!-- Announcements -->
-        <div class="col-md-3">
-            <div class="card stats-card bg-primary text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="card-title mb-2">Announcements</h6>
-                            <h2 class="display-6 mb-0"><?= $stats['announcements'] ?></h2>
-                        </div>
-                        <div class="icon-shape bg-white text-primary rounded p-2">
-                            <i class="bi bi-megaphone fs-4"></i>
-                        </div>
-                    </div>
-                    <small class="d-block mt-2">Total active announcements</small>
-                </div>
-            </div>
-        </div>
-
         <!-- Pending Contacts -->
         <div class="col-md-3">
             <div class="card stats-card bg-warning text-dark h-100">
@@ -118,11 +100,7 @@
                                     <div class="d-flex w-100 justify-content-between align-items-center">
                                         <div>
                                             <h6 class="mb-1">
-                                                <?php if ($activity['type'] === 'announcement'): ?>
-                                                    <i class="bi bi-megaphone text-primary me-2"></i>
-                                                <?php else: ?>
-                                                    <i class="bi bi-envelope text-warning me-2"></i>
-                                                <?php endif; ?>
+                                                <i class="bi bi-envelope text-warning me-2"></i>
                                                 <?= htmlspecialchars($activity['action']) ?>
                                             </h6>
                                             <p class="mb-1 text-muted">
