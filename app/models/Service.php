@@ -16,11 +16,23 @@ class Service extends Model {
      */
     protected $table = 'services';
     /**
-     * Get all active services ordered by display order
+     * Get all services for admin panel
      *
-     * @return array Array of services
+     * @return array Array of all services
      */
     public function getAllServices() {
+        $sql = "SELECT * FROM services ORDER BY display_order ASC";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get all active services ordered by display order
+     *
+     * @return array Array of active services
+     */
+    public function getAllActiveServices() {
         $sql = "SELECT * FROM services WHERE is_active = 1 ORDER BY display_order ASC";
         $stmt = $this->getDB()->prepare($sql);
         $stmt->execute();
@@ -34,7 +46,7 @@ class Service extends Model {
      * @return array|false Service data or false if not found
      */
     public function getServiceById($id) {
-        $sql = "SELECT * FROM services WHERE id = :id AND is_active = 1";
+        $sql = "SELECT * FROM services WHERE id = :id";
         $stmt = $this->getDB()->prepare($sql);
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -47,14 +59,16 @@ class Service extends Model {
      * @return bool Success status
      */
     public function createService($data) {
-        $sql = "INSERT INTO services (title, description, icon, display_order) 
-                VALUES (:title, :description, :icon, :display_order)";
+        $sql = "INSERT INTO services (title, description, category, icon_class, display_order, is_active) 
+                VALUES (:title, :description, :category, :icon_class, :display_order, :is_active)";
         $stmt = $this->getDB()->prepare($sql);
         return $stmt->execute([
             'title' => $data['title'],
             'description' => $data['description'],
-            'icon' => $data['icon'],
-            'display_order' => $data['display_order']
+            'category' => $data['category'] ?? '',
+            'icon_class' => $data['icon_class'] ?? '',
+            'display_order' => $data['display_order'] ?? 0,
+            'is_active' => isset($data['is_active']) ? 1 : 0
         ]);
     }
 
@@ -69,18 +83,20 @@ class Service extends Model {
         $sql = "UPDATE services 
                 SET title = :title, 
                     description = :description, 
-                    icon = :icon, 
+                    category = :category,
+                    icon_class = :icon_class, 
                     display_order = :display_order,
                     is_active = :is_active
                 WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->getDB()->prepare($sql);
         return $stmt->execute([
             'id' => $id,
             'title' => $data['title'],
             'description' => $data['description'],
-            'icon' => $data['icon'],
-            'display_order' => $data['display_order'],
-            'is_active' => $data['is_active']
+            'category' => $data['category'] ?? '',
+            'icon_class' => $data['icon_class'] ?? '',
+            'display_order' => $data['display_order'] ?? 0,
+            'is_active' => isset($data['is_active']) ? 1 : 0
         ]);
     }
 
@@ -91,8 +107,8 @@ class Service extends Model {
      * @return bool Success status
      */
     public function deleteService($id) {
-        $sql = "UPDATE services SET is_active = 0 WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
+        $sql = "DELETE FROM services WHERE id = :id";
+        $stmt = $this->getDB()->prepare($sql);
         return $stmt->execute(['id' => $id]);
     }
 }

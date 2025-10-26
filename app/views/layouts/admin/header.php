@@ -53,6 +53,9 @@
         </div>
     </nav>
 
+    <!-- Alerts Container -->
+    <div id="alertsContainer" class="alerts-container"></div>
+
     <!-- Admin Content Wrapper -->
     <div class="admin-wrapper">
         <!-- Sidebar will be included here -->

@@ -11,6 +11,7 @@ class AdminController extends Controller {
     private $databaseModel;
     private $announcementModel;
     private $policyModel;
+    private $serviceModel;
 
     public function __construct() {
         parent::__construct();
@@ -19,6 +20,7 @@ class AdminController extends Controller {
         $this->databaseModel = new \App\Models\Database();
         $this->announcementModel = new \App\Models\Announcement();
         $this->policyModel = new \App\Models\Policy();
+        $this->serviceModel = new \App\Models\Service();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -604,5 +606,131 @@ class AdminController extends Controller {
         }
 
         header('Location: ' . BASE_URL . '/admin/manage-policies');
+    }
+
+    /**
+     * Display services management page
+     */
+    public function manageServices() {
+        try {
+            $services = $this->serviceModel->getAllServices();
+
+            $data = [
+                'pageTitle' => 'Manage Services - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_services',
+                'layout' => 'admin',
+                'services' => $services,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_services', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageServices(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the services.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Create a new service
+     */
+    public function createService() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-services');
+                return;
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'description' => trim($_POST['description'] ?? ''),
+                'category' => trim($_POST['category'] ?? ''),
+                'icon_class' => trim($_POST['icon_class'] ?? ''),
+                'display_order' => intval($_POST['display_order'] ?? 0),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            $this->serviceModel->createService($data);
+            $this->setFlashMessage('success', 'Service added successfully.');
+
+        } catch (\InvalidArgumentException $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->createService(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while creating the service.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-services');
+    }
+
+    /**
+     * Update an existing service
+     */
+    public function updateService() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-services');
+                return;
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No service ID provided');
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'description' => trim($_POST['description'] ?? ''),
+                'category' => trim($_POST['category'] ?? ''),
+                'icon_class' => trim($_POST['icon_class'] ?? ''),
+                'display_order' => intval($_POST['display_order'] ?? 0),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            $this->serviceModel->updateService($id, $data);
+            $this->setFlashMessage('success', 'Service updated successfully.');
+
+        } catch (\InvalidArgumentException $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateService(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while updating the service.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-services');
+    }
+
+    /**
+     * Delete a service
+     */
+    public function deleteService() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No service ID provided');
+            }
+
+            // Check if service exists and delete it
+            if ($this->serviceModel->getServiceById($id)) {
+                $this->serviceModel->deleteService($id);
+                $this->setFlashMessage('success', 'Service deleted successfully.');
+            } else {
+                throw new \Exception('Service not found');
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->deleteService(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while deleting the service: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-services');
     }
 }

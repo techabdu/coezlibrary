@@ -7,7 +7,7 @@ body {
 
 /* Navbar Customization */
 .navbar.fixed-top {
-    z-index: 1030; /* Highest z-index */
+    z-index: 1500; /* High z-index but below alerts */
     box-shadow: 0 2px 4px rgba(0,0,0,.1);
 }
 
@@ -21,7 +21,7 @@ body {
     background: #343a40;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    z-index: 1020; /* Below navbar */
+    z-index: 1400; /* Below navbar but above main content */
 }
 
 /* Main Content Area */
@@ -31,7 +31,7 @@ body {
     min-height: calc(100vh - 56px);
     background: #f8f9fa;
     position: relative;
-    z-index: 1010; /* Below sidebar */
+    z-index: 1300; /* Below sidebar */
     flex: 1;
     width: calc(100% - 250px);
 }
@@ -89,12 +89,27 @@ body {
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
+/* Alerts Container */
+.alerts-container {
+    position: fixed;
+    top: 56px; /* Height of navbar */
+    right: 0;
+    left: 0;
+    z-index: 2000;
+    padding: 1rem;
+    pointer-events: none; /* Allow clicking through the container */
+}
+
+.alerts-container .alert {
+    max-width: 600px;
+    margin: 0 auto 1rem;
+    pointer-events: auto; /* Restore pointer events for the alerts themselves */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
 /* Flash Messages */
 .alert-dismissible {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1050;
+    margin-bottom: 1rem;
 }
 
 /* Layout Fixes */
