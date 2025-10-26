@@ -101,10 +101,10 @@ $categories = [
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-primary btn-sm" 
+                                            <button type="button" class="btn btn-primary btn-sm edit-service-btn" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#editServiceModal" 
-                                                    data-service='<?= json_encode($service) ?>'>
+                                                    data-service='<?= htmlspecialchars(json_encode($service), ENT_QUOTES, 'UTF-8') ?>'>
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <button type="button" class="btn btn-danger btn-sm" 
@@ -179,14 +179,14 @@ $categories = [
 </div>
 
 <!-- Edit Service Modal -->
-<div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
+<div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="editServiceForm" action="<?= BASE_URL ?>/admin/update-service" method="POST">
                 <input type="hidden" name="id" id="edit_id">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="0"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -258,27 +258,51 @@ $categories = [
 <!-- Initialize DataTable -->
 <script>
 $(document).ready(function() {
-    // Initialize DataTable
-    $('#servicesTable').DataTable({
-        responsive: true,
-        order: [[4, 'asc']], // Sort by display order by default
-        columnDefs: [
-            { orderable: false, targets: [3, 6] } // Disable sorting for icon and actions columns
-        ]
-    });
+    try {
+        // Check if DataTable function exists
+        if (typeof $.fn.DataTable === 'undefined') {
+            console.error('DataTables is not loaded. Please check your script includes.');
+            return;
+        }
+
+        // Initialize DataTable
+        $('#servicesTable').DataTable({
+            responsive: true,
+            order: [[4, 'asc']], // Sort by display order by default
+            columnDefs: [
+                { orderable: false, targets: [3, 6] } // Disable sorting for icon and actions columns
+            ],
+            language: {
+                emptyTable: 'No services available',
+                zeroRecords: 'No matching services found'
+            }
+        });
+    } catch (error) {
+        console.error('Error initializing DataTable:', error);
+    }
 
     // Handle edit modal
     $('#editServiceModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var service = button.data('service');
-        
-        $('#edit_id').val(service.id);
-        $('#edit_title').val(service.title);
-        $('#edit_category').val(service.category);
-        $('#edit_description').val(service.description);
-        $('#edit_icon_class').val(service.icon_class);
-        $('#edit_display_order').val(service.display_order);
-        $('#edit_is_active').prop('checked', service.is_active == 1);
+        try {
+            var button = $(event.relatedTarget);
+            var serviceJson = button.data('service');
+            var service = (typeof serviceJson === 'string') ? JSON.parse(serviceJson) : serviceJson;
+            
+            if (!service) {
+                console.error('Service data is missing');
+                return;
+            }
+
+            $('#edit_id').val(service.id);
+            $('#edit_title').val(service.title || '');
+            $('#edit_category').val(service.category || '');
+            $('#edit_description').val(service.description || '');
+            $('#edit_icon_class').val(service.icon_class || '');
+            $('#edit_display_order').val(service.display_order || 0);
+            $('#edit_is_active').prop('checked', service.is_active == 1);
+        } catch (e) {
+            console.error('Error populating edit form:', e);
+        }
     });
 });
 
