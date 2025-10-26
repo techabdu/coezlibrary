@@ -2,9 +2,6 @@
 /**
  * Admin - Manage Policies View
  */
-
-// Include the admin header
-include APP_PATH . '/views/layouts/admin/header.php';
 ?>
 
 <div class="d-flex">
@@ -15,48 +12,60 @@ include APP_PATH . '/views/layouts/admin/header.php';
     <div class="admin-main">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
             <h1 class="h2">Manage Policies</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item"><a href="<?= BASE_URL ?>/admin/dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active">Manage Policies</li>
+            </ol>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <?php if (isset($success)): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="position: relative; z-index: 1050;">
-                        <?= $success ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
+
+        <!-- Success/Error Messages -->
+        <div id="alertsContainer">
+            <?php if (isset($success)): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= $success ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
 
                 <?php if (isset($error)): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="position: relative; z-index: 1050;">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <?= $error ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
 
-                <!-- Add New Policy Button -->
-                <div class="mb-4">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPolicyModal">
-                        <i class="bi bi-plus-lg"></i> Add New Policy
-                    </button>
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPolicyModal">
+                            <i class="bi bi-plus-circle me-2"></i>Add New Policy
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Policies Table -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <i class="bi bi-shield-check me-1"></i>
-                        Library Policies
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-shield-check me-1"></i>
+                                Library Policies
+                            </h5>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <table id="policiesTable" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Category</th>
-                                    <th>Content</th>
-                                    <th>Order</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
+                        <div class="table-responsive">
+                            <table id="policiesTable" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Content</th>
+                                        <th>Order</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
                             <tbody>
                                 <?php foreach ($policies as $policy): ?>
                                     <tr>
@@ -73,12 +82,14 @@ include APP_PATH . '/views/layouts/admin/header.php';
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-primary edit-policy" data-id="<?= $policy['id'] ?>">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger delete-policy" data-id="<?= $policy['id'] ?>">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-primary btn-sm edit-policy" data-id="<?= $policy['id'] ?>">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm delete-policy" data-id="<?= $policy['id'] ?>">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -211,6 +222,20 @@ include APP_PATH . '/views/layouts/admin/header.php';
 <!-- Include DataTables -->
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Auto-dismiss alerts script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-dismiss alerts after 5 seconds
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+});
+</script>
 
 <!-- Include manage_policies.js -->
 <script src="<?= BASE_URL ?>/public/js/manage_policies.js?v=<?= time() ?>"></script>

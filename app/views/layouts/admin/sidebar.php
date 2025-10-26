@@ -17,10 +17,6 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_announcements' ? 'active' : '' ?>">
             <i class="bi bi-megaphone me-2"></i>Manage Announcements
         </a>
-        <a href="<?= BASE_URL ?>/admin/pages" 
-           class="list-group-item list-group-item-action <?= $currentPage === 'pages' ? 'active' : '' ?>">
-            <i class="bi bi-file-text me-2"></i>Pages
-        </a>
 
         <a href="<?= BASE_URL ?>/admin/manage-faqs" 
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_faqs' ? 'active' : '' ?>">
@@ -51,10 +47,7 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_librarian' ? 'active' : '' ?>">
             <i class="bi bi-person-badge me-2"></i>Librarian Profile
         </a>
-        <a href="<?= BASE_URL ?>/admin/staff" 
-           class="list-group-item list-group-item-action <?= $currentPage === 'staff' ? 'active' : '' ?>">
-            <i class="bi bi-people me-2"></i>Staff Members
-        </a>
+        
         <a href="<?= BASE_URL ?>/admin/account" 
            class="list-group-item list-group-item-action <?= $currentPage === 'account' ? 'active' : '' ?>">
             <i class="bi bi-person-circle me-2"></i>Account Settings

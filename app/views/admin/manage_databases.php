@@ -2,9 +2,6 @@
 /**
  * Admin - Manage Databases View
  */
-
-// Include the admin header
-include APP_PATH . '/views/layouts/admin/header.php';
 ?>
 
 <div class="d-flex">
@@ -13,18 +10,17 @@ include APP_PATH . '/views/layouts/admin/header.php';
 
     <!-- Main Content -->
     <div class="admin-main">
-        <div class="container-fluid px-4">
-            <h1 class="mt-4">Manage Databases</h1>
+        <h1 class="h2 mb-3">Manage Databases</h1>
     
     <?php if (isset($success)): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert" style="position: relative; z-index: 1050;">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?= $success ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
 
     <?php if (isset($error)): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="position: relative; z-index: 1050;">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?= $error ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -38,7 +34,7 @@ include APP_PATH . '/views/layouts/admin/header.php';
     </div>
 
     <!-- Databases Table -->
-    <div class="card mb-4">
+    <div class="card shadow-hover mb-4">
         <div class="card-header">
             <i class="bi bi-table me-1"></i>
             External Databases

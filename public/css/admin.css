@@ -2,7 +2,9 @@
 
 body {
     min-height: 100vh;
-    padding-top: 56px; /* Height of navbar */
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
 }
 
 /* Navbar Customization */
@@ -22,18 +24,20 @@ body {
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     overflow-y: auto;
     z-index: 1400; /* Below navbar but above main content */
+    margin-top: 0; /* Reset margin to align with navbar */
 }
 
 /* Main Content Area */
 .admin-main {
     margin-left: 250px;
-    padding: 20px;
-    min-height: calc(100vh - 56px);
+    margin-top: 30px; /* Match navbar height */
+    padding: 1.25rem;
     background: #f8f9fa;
     position: relative;
     z-index: 1300; /* Below sidebar */
-    flex: 1;
+    flex: 1 0 auto;
     width: calc(100% - 250px);
+    min-height: 0; /* Remove fixed height */
 }
 
 /* Sidebar Styles */
@@ -113,22 +117,143 @@ body {
 }
 
 /* Layout Fixes */
-.d-flex {
-    min-height: 100vh;
+.admin-wrapper {
+    display: flex;
+    flex: 1;
     width: 100%;
+    position: relative;
+    margin-top: 56px; /* Match navbar height */
+}
+
+.container-fluid {
+    padding: 1.25rem;
+    max-width: 100%;
+}
+
+.card {
+    margin-bottom: 1.25rem;
+    height: auto;
+}
+
+/* Content area height fixes */
+.admin-content {
+    flex: 1 0 auto;
+    width: 100%;
+    padding: 1.25rem 0;
+}
+
+/* Row spacing fixes */
+.row {
+    margin-right: -0.625rem;
+    margin-left: -0.625rem;
+}
+
+.row > [class*="col-"] {
+    padding-right: 0.625rem;
+    padding-left: 0.625rem;
+}
+
+/* Login Page */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+}
+
+.login-container .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.login-container .card-header {
+    background: var(--bs-primary);
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 20px;
+}
+
+.login-container .card-body {
+    padding: 30px;
+}
+
+.login-container .form-floating {
+    margin-bottom: 1rem;
+}
+
+.btn-login {
+    padding: 12px;
+    font-weight: 500;
+}
+
+/* Image Sizes */
+.img-w-100 {
+    max-width: 100px;
+    height: auto;
+}
+
+.img-w-150 {
+    max-width: 150px;
+    height: auto;
+}
+
+.img-w-200 {
+    max-width: 200px;
+    height: auto;
+}
+
+/* Shadow Effects */
+.shadow-hover:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    transition: box-shadow .3s ease-in-out;
+}
+
+/* Alert Positioning */
+.admin-main .alert {
+    position: relative;
+    z-index: auto !important;
+}
+
+/* Override for modal alerts */
+.modal .alert {
+    position: relative;
+    z-index: 1050 !important;
+}
+
+/* Modal fix */
+.modal-backdrop {
+    z-index: 1500;
+}
+.modal {
+    z-index: 1550;
 }
 
 /* Media Queries */
 @media (max-width: 768px) {
     .admin-sidebar {
         margin-left: -250px;
+        transition: margin-left 0.3s ease-in-out;
     }
     
     .admin-sidebar.active {
         margin-left: 0;
     }
     
+    .admin-main {
+        margin-left: 0;
+        width: 100%;
+        transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    }
+    
+    .admin-main.sidebar-active {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+    }
+    
     #sidebarCollapse {
         display: block;
+    }
+    
+    .container-fluid {
+        padding: 1rem;
     }
 }

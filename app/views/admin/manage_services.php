@@ -313,10 +313,3 @@ function confirmDelete(serviceId) {
 }
 </script>
 
-<style>
-/* Add any custom styles here */
-.shadow-hover:hover {
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-    transition: box-shadow .3s ease-in-out;
-}
-</style>

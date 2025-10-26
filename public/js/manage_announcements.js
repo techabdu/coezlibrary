@@ -4,25 +4,18 @@ $(document).ready(function() {
     const $table = $('#announcementsTable');
     let selectedAnnouncement = null;
     
-    // Initialize DataTable with full width settings
+    // Initialize DataTable
     const dataTable = $table.DataTable({
         order: [[2, 'desc']], // Sort by date posted by default
         pageLength: 10,
-        responsive: true,
-        autoWidth: false,
-        scrollX: false,
-        columns: [
-            { width: '20%' }, // Title
-            { width: '40%' }, // Content
-            { width: '15%' }, // Date Posted
-            { width: '10%' }, // Status
-            { width: '15%' }  // Actions
-        ]
+        responsive: true
     });
 
     // Initialize modals
-    const deleteModal = new bootstrap.Modal('#deleteConfirmModal');
-    const editModal = new bootstrap.Modal('#editAnnouncementModal');
+    const deleteModalEl = document.getElementById('deleteConfirmModal');
+    const editModalEl = document.getElementById('editAnnouncementModal');
+    const deleteModal = new bootstrap.Modal(deleteModalEl);
+    const editModal = new bootstrap.Modal(editModalEl);
     
     // Handle delete button clicks
     $table.on('click', '.delete-announcement', function(e) {
@@ -35,6 +28,8 @@ $(document).ready(function() {
             title: $button.closest('tr').find('td:first').text().trim()
         };
         
+        console.log('Delete clicked for announcement:', selectedAnnouncement);
+        
         // Update modal text and show it
         $('#deleteConfirmModal .modal-body').text(
             `Are you sure you want to delete the announcement "${selectedAnnouncement.title}"? This action cannot be undone.`
@@ -43,34 +38,53 @@ $(document).ready(function() {
     });
 
     // Handle delete confirmation
-    $('#confirmDelete').on('click', function() {
-        if (!selectedAnnouncement) return;
-
-        // Create and submit the form
-        const $form = $('<form>', {
-            method: 'POST',
-            action: `${BASE_URL}/admin/delete-announcement`
-        });
-
-        // Add the announcement ID
-        $('<input>').attr({
-            type: 'hidden',
-            name: 'id',
-            value: selectedAnnouncement.id
-        }).appendTo($form);
-
-        // Add CSRF token if it exists
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
-        if (csrfToken) {
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'csrf_token',
-                value: csrfToken
-            }).appendTo($form);
+    $('#confirmDelete').on('click', function(e) {
+        e.preventDefault();
+        
+        if (!selectedAnnouncement) {
+            console.error('No announcement selected');
+            return;
         }
+        
+        console.log('Deleting announcement:', selectedAnnouncement);
+        
+        try {
+            // Hide the modal first
+            const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal'));
+            if (deleteModal) {
+                deleteModal.hide();
+            }
 
-        // Append to body and submit
-        $form.appendTo('body').submit();
+            // Create the form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = BASE_URL + '/admin/delete-announcement';
+            form.style.display = 'none';
+
+            // Add the announcement ID
+            const idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'id';
+            idInput.value = selectedAnnouncement.id;
+            form.appendChild(idInput);
+
+            // Add CSRF token if it exists
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (csrfToken) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrf_token';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+            }
+
+            // Append to body and submit
+            document.body.appendChild(form);
+            console.log('Submitting delete form:', form);
+            form.submit();
+        } catch (error) {
+            console.error('Error during delete:', error);
+        }
     });
     
     // Handle edit button clicks
