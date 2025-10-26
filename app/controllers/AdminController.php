@@ -733,4 +733,136 @@ class AdminController extends Controller {
 
         header('Location: ' . BASE_URL . '/admin/manage-services');
     }
+
+    /**
+     * Display library information management page
+     */
+    public function manageLibrary() {
+        try {
+            $collegeInfo = new \App\Models\CollegeInfo();
+            $sections = $collegeInfo->getAllSections();
+
+            $data = [
+                'pageTitle' => 'Manage Library Information - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_library',
+                'layout' => 'admin',
+                'sections' => $sections,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_library', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageLibrary(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the library information.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Update library section
+     */
+    public function updateLibrarySection() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-library');
+                return;
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No section ID provided');
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'content' => trim($_POST['content'] ?? '')
+            ];
+
+            $collegeInfo = new \App\Models\CollegeInfo();
+            $collegeInfo->updateSection($id, $data);
+            $this->setFlashMessage('success', 'Library section updated successfully.');
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateLibrarySection(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while updating the library section.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-library');
+    }
+
+    /**
+     * Display librarian profile management page
+     */
+    public function manageLibrarian() {
+        try {
+            $librarianInfo = new \App\Models\LibrarianInfo();
+            $librarian = $librarianInfo->getLibrarianInfo();
+            $socialLinks = $librarianInfo->getSocialLinks();
+
+            $data = [
+                'pageTitle' => 'Manage Librarian Profile - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_librarian',
+                'layout' => 'admin',
+                'librarian' => $librarian,
+                'social_links' => $socialLinks,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_librarian', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageLibrarian(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the librarian profile.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Update librarian information
+     */
+    public function updateLibrarian() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-librarian');
+                return;
+            }
+
+            $data = [
+                'name' => trim($_POST['name'] ?? ''),
+                'title' => trim($_POST['title'] ?? ''),
+                'qualification' => trim($_POST['qualification'] ?? ''),
+                'message' => trim($_POST['message'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
+                'phone' => trim($_POST['phone'] ?? ''),
+                'office_hours' => trim($_POST['office_hours'] ?? ''),
+                'social_links' => $_POST['social_links'] ?? []
+            ];
+
+            // Handle image upload
+            if (!empty($_FILES['image']['name'])) {
+                $uploadDir = 'public/images/staff/';
+                $fileName = basename($_FILES['image']['name']);
+                $targetPath = $uploadDir . $fileName;
+
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+                    $data['image_path'] = '/' . $targetPath;
+                }
+            }
+
+            $librarianInfo = new \App\Models\LibrarianInfo();
+            $librarianInfo->updateLibrarianInfo($data);
+            $this->setFlashMessage('success', 'Librarian profile updated successfully.');
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateLibrarian(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while updating the librarian profile.');
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-librarian');
+    }
 }

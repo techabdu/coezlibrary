@@ -48,4 +48,28 @@ class CollegeInfo extends Model {
             return null;
         }
     }
+
+    /**
+     * Update a section's content
+     * @param int $id Section ID
+     * @param array $data Updated section data
+     * @return bool Success status
+     */
+    public function updateSection($id, array $data): bool {
+        try {
+            $stmt = $this->getDB()->prepare("
+                UPDATE college_info 
+                SET title = :title, content = :content 
+                WHERE id = :id
+            ");
+            return $stmt->execute([
+                'id' => $id,
+                'title' => $data['title'],
+                'content' => $data['content']
+            ]);
+        } catch (Exception $e) {
+            error_log("Error in CollegeInfo->updateSection(): " . $e->getMessage());
+            return false;
+        }
+    }
 }

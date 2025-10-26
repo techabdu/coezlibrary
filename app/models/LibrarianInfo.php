@@ -47,4 +47,50 @@ class LibrarianInfo extends Model {
             return [];
         }
     }
+
+    /**
+     * Update librarian information
+     * @param array $data Updated librarian data
+     * @return bool Success status
+     */
+    public function updateLibrarianInfo(array $data): bool {
+        try {
+            $sql = "UPDATE librarian_info 
+                    SET name = :name,
+                        title = :title,
+                        qualification = :qualification,
+                        message = :message,
+                        email = :email,
+                        phone = :phone,
+                        office_hours = :office_hours,
+                        social_links = :social_links";
+
+            if (!empty($data['image_path'])) {
+                $sql .= ", image_path = :image_path";
+            }
+
+            $sql .= " WHERE id = 1";
+
+            $params = [
+                'name' => $data['name'],
+                'title' => $data['title'],
+                'qualification' => $data['qualification'],
+                'message' => $data['message'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+                'office_hours' => $data['office_hours'],
+                'social_links' => json_encode($data['social_links'] ?? [])
+            ];
+
+            if (!empty($data['image_path'])) {
+                $params['image_path'] = $data['image_path'];
+            }
+
+            $stmt = $this->getDB()->prepare($sql);
+            return $stmt->execute($params);
+        } catch (Exception $e) {
+            error_log("Error in LibrarianInfo->updateLibrarianInfo(): " . $e->getMessage());
+            return false;
+        }
+    }
 }

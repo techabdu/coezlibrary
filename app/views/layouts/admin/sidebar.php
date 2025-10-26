@@ -38,6 +38,14 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_services' ? 'active' : '' ?>">
             <i class="bi bi-gear me-2"></i>Manage Services
         </a>
+        <a href="<?= BASE_URL ?>/admin/manage-library" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_library' ? 'active' : '' ?>">
+            <i class="bi bi-building me-2"></i>Library Information
+        </a>
+        <a href="<?= BASE_URL ?>/admin/manage-librarian" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_librarian' ? 'active' : '' ?>">
+            <i class="bi bi-person-badge me-2"></i>Librarian Profile
+        </a>
         <a href="<?= BASE_URL ?>/admin/staff" 
            class="list-group-item list-group-item-action <?= $currentPage === 'staff' ? 'active' : '' ?>">
             <i class="bi bi-people me-2"></i>Staff Members

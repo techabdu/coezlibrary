@@ -73,7 +73,13 @@ class Router {
         'admin/manage-services' => ['controller' => 'Admin', 'action' => 'manageServices'],
         'admin/create-service' => ['controller' => 'Admin', 'action' => 'createService'],
         'admin/update-service' => ['controller' => 'Admin', 'action' => 'updateService'],
-        'admin/delete-service' => ['controller' => 'Admin', 'action' => 'deleteService']
+        'admin/delete-service' => ['controller' => 'Admin', 'action' => 'deleteService'],
+        // Library Information Routes
+        'admin/manage-library' => ['controller' => 'Admin', 'action' => 'manageLibrary'],
+        'admin/update-library-section' => ['controller' => 'Admin', 'action' => 'updateLibrarySection'],
+        // Librarian Profile Routes
+        'admin/manage-librarian' => ['controller' => 'Admin', 'action' => 'manageLibrarian'],
+        'admin/update-librarian' => ['controller' => 'Admin', 'action' => 'updateLibrarian']
     ];
 
     /**
