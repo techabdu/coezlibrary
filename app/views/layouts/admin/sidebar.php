@@ -22,6 +22,11 @@
             <i class="bi bi-file-text me-2"></i>Pages
         </a>
 
+        <a href="<?= BASE_URL ?>/admin/manage-faqs" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_faqs' ? 'active' : '' ?>">
+            <i class="bi bi-question-circle me-2"></i>Manage FAQs
+        </a>
+
         <a href="<?= BASE_URL ?>/admin/manage-databases" 
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_databases' ? 'active' : '' ?>">
             <i class="bi bi-server me-2"></i>Manage Databases

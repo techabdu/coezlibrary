@@ -44,4 +44,69 @@ class FAQ extends Model {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+
+    /**
+     * Get FAQ by ID
+     * @param int $id FAQ ID
+     * @return array|false FAQ data or false if not found
+     */
+    public function getFAQById(int $id) {
+        $sql = "SELECT * FROM faq WHERE id = :id";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Create a new FAQ
+     * @param array $data FAQ data
+     * @return bool Success status
+     */
+    public function createFAQ(array $data): bool {
+        $sql = "INSERT INTO faq (question, answer, category, display_order) 
+                VALUES (:question, :answer, :category, :display_order)";
+        
+        $stmt = $this->getDB()->prepare($sql);
+        return $stmt->execute([
+            'question' => $data['question'],
+            'answer' => $data['answer'],
+            'category' => $data['category'],
+            'display_order' => intval($data['display_order'] ?? 0)
+        ]);
+    }
+
+    /**
+     * Update an existing FAQ
+     * @param int $id FAQ ID
+     * @param array $data Updated FAQ data
+     * @return bool Success status
+     */
+    public function updateFAQ(int $id, array $data): bool {
+        $sql = "UPDATE faq 
+                SET question = :question,
+                    answer = :answer,
+                    category = :category,
+                    display_order = :display_order
+                WHERE id = :id";
+        
+        $stmt = $this->getDB()->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'question' => $data['question'],
+            'answer' => $data['answer'],
+            'category' => $data['category'],
+            'display_order' => intval($data['display_order'] ?? 0)
+        ]);
+    }
+
+    /**
+     * Delete a FAQ
+     * @param int $id FAQ ID
+     * @return bool Success status
+     */
+    public function deleteFAQ(int $id): bool {
+        $sql = "DELETE FROM faq WHERE id = :id";
+        $stmt = $this->getDB()->prepare($sql);
+        return $stmt->execute(['id' => $id]);
+    }
 }

@@ -12,6 +12,7 @@ class AdminController extends Controller {
     private $announcementModel;
     private $policyModel;
     private $serviceModel;
+    private $faqModel;
 
     public function __construct() {
         parent::__construct();
@@ -21,6 +22,7 @@ class AdminController extends Controller {
         $this->announcementModel = new \App\Models\Announcement();
         $this->policyModel = new \App\Models\Policy();
         $this->serviceModel = new \App\Models\Service();
+        $this->faqModel = new \App\Models\FAQ();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -891,5 +893,201 @@ class AdminController extends Controller {
         }
 
         header('Location: ' . BASE_URL . '/admin/manage-librarian');
+    }
+
+    /**
+     * Display FAQ management page
+     */
+    public function manageFAQs() {
+        try {
+            $faqs = $this->faqModel->getAllFAQs();
+            $categories = $this->faqModel->getAllCategories();
+
+            $data = [
+                'pageTitle' => 'Manage FAQs - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_faqs',
+                'layout' => 'admin',
+                'faqs' => $faqs,
+                'categories' => $categories,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_faqs', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageFAQs(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the FAQs.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Create a new FAQ
+     */
+    public function createFAQ() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-faqs');
+                return;
+            }
+
+            $data = [
+                'question' => trim($_POST['question'] ?? ''),
+                'answer' => trim($_POST['answer'] ?? ''),
+                'category' => trim($_POST['category'] ?? ''),
+                'display_order' => intval($_POST['display_order'] ?? 0)
+            ];
+
+            $this->faqModel->createFAQ($data);
+            
+            // Return JSON response for AJAX requests
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'message' => 'FAQ added successfully.']);
+                return;
+            }
+
+            $this->setFlashMessage('success', 'FAQ added successfully.');
+            header('Location: ' . BASE_URL . '/admin/manage-faqs');
+
+        } catch (\InvalidArgumentException $e) {
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(400);
+                echo json_encode(['error' => $e->getMessage()]);
+                return;
+            }
+
+            $this->setFlashMessage('error', $e->getMessage());
+            header('Location: ' . BASE_URL . '/admin/manage-faqs');
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->createFAQ(): " . $e->getMessage());
+
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(500);
+                echo json_encode(['error' => 'An error occurred while creating the FAQ.']);
+                return;
+            }
+
+            $this->setFlashMessage('error', 'An error occurred while creating the FAQ.');
+            header('Location: ' . BASE_URL . '/admin/manage-faqs');
+        }
+    }
+
+    /**
+     * Update an existing FAQ
+     */
+    public function updateFAQ() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                header('Location: ' . BASE_URL . '/admin/manage-faqs');
+                return;
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No FAQ ID provided');
+            }
+
+            $data = [
+                'question' => trim($_POST['question'] ?? ''),
+                'answer' => trim($_POST['answer'] ?? ''),
+                'category' => trim($_POST['category'] ?? ''),
+                'display_order' => intval($_POST['display_order'] ?? 0)
+            ];
+
+            $this->faqModel->updateFAQ($id, $data);
+            
+            // Return JSON response for AJAX requests
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'message' => 'FAQ updated successfully.']);
+                return;
+            }
+
+            $this->setFlashMessage('success', 'FAQ updated successfully.');
+            header('Location: ' . BASE_URL . '/admin/manage-faqs');
+
+        } catch (\InvalidArgumentException $e) {
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(400);
+                echo json_encode(['error' => $e->getMessage()]);
+                return;
+            }
+
+            $this->setFlashMessage('error', $e->getMessage());
+            header('Location: ' . BASE_URL . '/admin/manage-faqs');
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateFAQ(): " . $e->getMessage());
+
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(500);
+                echo json_encode(['error' => 'An error occurred while updating the FAQ.']);
+                return;
+            }
+
+            $this->setFlashMessage('error', 'An error occurred while updating the FAQ.');
+            header('Location: ' . BASE_URL . '/admin/manage-faqs');
+        }
+    }
+
+    /**
+     * Delete a FAQ
+     */
+    public function deleteFAQ() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No FAQ ID provided');
+            }
+
+            // Check if FAQ exists and delete it
+            if ($this->faqModel->getFAQById($id)) {
+                $this->faqModel->deleteFAQ($id);
+                
+                // Return JSON response for AJAX requests
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                    strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'message' => 'FAQ deleted successfully.']);
+                    return;
+                }
+
+                $this->setFlashMessage('success', 'FAQ deleted successfully.');
+            } else {
+                throw new \Exception('FAQ not found');
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->deleteFAQ(): " . $e->getMessage());
+
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(500);
+                echo json_encode(['error' => 'An error occurred while deleting the FAQ: ' . $e->getMessage()]);
+                return;
+            }
+
+            $this->setFlashMessage('error', 'An error occurred while deleting the FAQ: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-faqs');
     }
 }

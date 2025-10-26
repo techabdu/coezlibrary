@@ -54,6 +54,12 @@ class Router {
         'ebooks' => ['controller' => 'Resources', 'action' => 'ebooks'],
         'ejournals' => ['controller' => 'Resources', 'action' => 'ejournals'],
         // Admin Routes
+        // FAQ Routes
+        'admin/manage-faqs' => ['controller' => 'Admin', 'action' => 'manageFAQs'],
+        'admin/create-faq' => ['controller' => 'Admin', 'action' => 'createFAQ'],
+        'admin/update-faq' => ['controller' => 'Admin', 'action' => 'updateFAQ'],
+        'admin/delete-faq' => ['controller' => 'Admin', 'action' => 'deleteFAQ'],
+        // Database Routes
         'admin/manage-databases' => ['controller' => 'Admin', 'action' => 'manageDatabases'],
         'admin/create-database' => ['controller' => 'Admin', 'action' => 'createDatabase'],
         'admin/edit-database' => ['controller' => 'Admin', 'action' => 'editDatabase'],
