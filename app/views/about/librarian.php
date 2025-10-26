@@ -31,7 +31,7 @@
                 <div class="col-lg-4">
                     <div class="card profile-card border-0 shadow-sm h-100">
                         <div class="position-relative">
-                            <img src="<?= htmlspecialchars($librarian['image_path']) ?>" 
+                            <img src="<?= BASE_URL . htmlspecialchars($librarian['image_path'] ?? '/public/images/default-profile.jpg') ?>" 
                                  class="card-img-top profile-image" 
                                  alt="<?= htmlspecialchars($librarian['name']) ?>">
                         </div>

@@ -843,18 +843,45 @@ class AdminController extends Controller {
                 'social_links' => $_POST['social_links'] ?? []
             ];
 
+            $librarianInfo = new \App\Models\LibrarianInfo();
+
             // Handle image upload
             if (!empty($_FILES['image']['name'])) {
+                // Validate file type
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                $fileType = $_FILES['image']['type'];
+                
+                if (!in_array($fileType, $allowedTypes)) {
+                    throw new \Exception('Invalid file type. Only JPG, PNG, and GIF files are allowed.');
+                }
+
+                // Generate unique filename
                 $uploadDir = 'public/images/staff/';
-                $fileName = basename($_FILES['image']['name']);
+                $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $fileName = 'librarian_' . time() . '.' . $extension;
                 $targetPath = $uploadDir . $fileName;
 
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-                    $data['image_path'] = '/' . $targetPath;
+                // Ensure upload directory exists
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                // Move uploaded file
+                if (!move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+                    throw new \Exception('Failed to upload image. Please try again.');
+                }
+
+                $data['image_path'] = '/' . $targetPath;
+
+                // Delete old image if exists
+                $oldImage = $librarianInfo->getLibrarianInfo();
+                if ($oldImage && !empty($oldImage['image_path'])) {
+                    $oldPath = ltrim($oldImage['image_path'], '/');
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
                 }
             }
-
-            $librarianInfo = new \App\Models\LibrarianInfo();
             $librarianInfo->updateLibrarianInfo($data);
             $this->setFlashMessage('success', 'Librarian profile updated successfully.');
 

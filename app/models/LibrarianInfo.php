@@ -55,6 +55,17 @@ class LibrarianInfo extends Model {
      */
     public function updateLibrarianInfo(array $data): bool {
         try {
+            $params = [
+                'name' => $data['name'],
+                'title' => $data['title'],
+                'qualification' => $data['qualification'],
+                'message' => $data['message'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+                'office_hours' => $data['office_hours'],
+                'social_links' => json_encode($data['social_links'] ?? [])
+            ];
+
             $sql = "UPDATE librarian_info 
                     SET name = :name,
                         title = :title,

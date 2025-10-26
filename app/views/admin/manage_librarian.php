@@ -27,7 +27,7 @@
                     <!-- Profile Image -->
                     <div class="col-md-3 text-center mb-4">
                         <div class="mb-3">
-                            <img src="<?= !empty($librarian['image_path']) ? BASE_URL . $librarian['image_path'] : BASE_URL . '/public/images/default-profile.jpg' ?>" 
+                            <img src="<?= BASE_URL . ($librarian['image_path'] ?? '/public/images/default-profile.jpg') ?>" 
                                  class="img-thumbnail mb-2" alt="Librarian Profile" style="max-width: 200px;">
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
                             <small class="form-text text-muted">Recommended size: 400x400px</small>
