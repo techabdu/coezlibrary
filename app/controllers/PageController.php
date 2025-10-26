@@ -172,7 +172,7 @@ class PageController extends Controller {
         try {
             // Create service model instance and get data
             $serviceModel = new Service();
-            $services = $serviceModel->getAllServices();
+            $services = $serviceModel->getAllActiveServices();
             
             if (empty($services)) {
                 throw new Exception('No services found');

@@ -26,7 +26,7 @@
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center mb-4">
                                 <div class="feature-icon bg-light text-accent rounded-3 p-3 me-3">
-                                    <i class="bi <?= htmlspecialchars($service['icon']) ?> fs-4"></i>
+                                    <i class="bi <?= htmlspecialchars($service['icon_class']) ?> fs-4"></i>
                                 </div>
                                 <h2 class="h4 mb-0"><?= htmlspecialchars($service['title']) ?></h2>
                             </div>
