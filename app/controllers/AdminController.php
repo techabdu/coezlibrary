@@ -13,6 +13,7 @@ class AdminController extends Controller {
     private $policyModel;
     private $serviceModel;
     private $faqModel;
+    private $contactModel;
 
     public function __construct() {
         parent::__construct();
@@ -23,6 +24,7 @@ class AdminController extends Controller {
         $this->policyModel = new \App\Models\Policy();
         $this->serviceModel = new \App\Models\Service();
         $this->faqModel = new \App\Models\FAQ();
+        $this->contactModel = new \App\Models\Contact();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -1089,5 +1091,145 @@ class AdminController extends Controller {
         }
 
         header('Location: ' . BASE_URL . '/admin/manage-faqs');
+    }
+
+    /**
+     * Display contact submissions management page
+     */
+    public function manageContacts() {
+        try {
+            $status = $_GET['status'] ?? null;
+            $search = $_GET['search'] ?? null;
+
+            $submissions = $this->contactModel->getAllSubmissions($status, $search);
+
+            $data = [
+                'pageTitle' => 'Manage Contact Submissions - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_contacts',
+                'layout' => 'admin',
+                'submissions' => $submissions,
+                'currentStatus' => $status,
+                'currentSearch' => $search,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_contacts', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageContacts(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the contact submissions.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * View details of a specific contact submission
+     */
+    public function viewContact() {
+        try {
+            if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+                throw new \Exception('Invalid or missing submission ID');
+            }
+
+            $id = intval($_GET['id']);
+            
+            // Get submission details
+            $submission = $this->contactModel->getSubmissionById($id);
+            
+            // Debug log
+            error_log("Fetching submission ID: " . $id);
+            error_log("Submission data: " . print_r($submission, true));
+            
+            if (!$submission) {
+                throw new \Exception('Submission not found');
+            }
+
+            // Sanitize data for display
+            $sanitizedSubmission = array_map('htmlspecialchars', $submission);
+
+            // For AJAX requests, return just the submission details
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                
+                $response = [
+                    'success' => true, 
+                    'submission' => $sanitizedSubmission
+                ];
+                
+                // Debug log
+                error_log("Sending JSON response: " . json_encode($response));
+                
+                header('Content-Type: application/json');
+                echo json_encode($response);
+                exit; // Make sure we exit after sending JSON
+            }
+
+            // For non-AJAX requests, render the full page
+            $data = [
+                'pageTitle' => 'View Contact Submission - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_contacts',
+                'layout' => 'admin',
+                'submission' => $sanitizedSubmission,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/view_contact', $data);
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->viewContact(): " . $e->getMessage());
+            
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                header('Content-Type: application/json');
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+                return;
+            }
+
+            $this->setFlashMessage('error', 'An error occurred while loading the submission details.');
+            header('Location: ' . BASE_URL . '/admin/manage-contacts');
+        }
+    }
+
+    /**
+     * Update the status of a contact submission
+     */
+    public function updateContactStatus() {
+        header('Content-Type: application/json');
+        
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $id = $_POST['id'] ?? null;
+            $status = $_POST['status'] ?? null;
+
+            if (!$id || !$status) {
+                throw new \Exception('Missing required parameters');
+            }
+
+            // Validate status value
+            $validStatuses = ['pending', 'responded', 'archived'];
+            if (!in_array($status, $validStatuses)) {
+                throw new \Exception('Invalid status value');
+            }
+
+            // Update the status
+            if ($this->contactModel->updateStatus($id, $status)) {
+                echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+            } else {
+                throw new \Exception('Failed to update status');
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateContactStatus(): " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
     }
 }

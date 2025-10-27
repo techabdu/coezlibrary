@@ -85,7 +85,11 @@ class Router {
         'admin/update-library-section' => ['controller' => 'Admin', 'action' => 'updateLibrarySection'],
         // Librarian Profile Routes
         'admin/manage-librarian' => ['controller' => 'Admin', 'action' => 'manageLibrarian'],
-        'admin/update-librarian' => ['controller' => 'Admin', 'action' => 'updateLibrarian']
+        'admin/update-librarian' => ['controller' => 'Admin', 'action' => 'updateLibrarian'],
+        // Contact Management Routes
+        'admin/manage-contacts' => ['controller' => 'Admin', 'action' => 'manageContacts'],
+        'admin/view-contact' => ['controller' => 'Admin', 'action' => 'viewContact'],
+        'admin/update-contact-status' => ['controller' => 'Admin', 'action' => 'updateContactStatus']
     ];
 
     /**

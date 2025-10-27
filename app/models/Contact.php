@@ -38,11 +38,36 @@ class Contact extends Model {
      * Get all contact submissions ordered by submission date
      * @return array Array of contact submissions
      */
-    public function getAllSubmissions(): array {
-        $sql = "SELECT * FROM contact_submissions ORDER BY submitted_at DESC";
-        $stmt = $this->getDB()->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    /**
+     * Get all contact submissions with optional filtering
+     * @param string|null $status Filter by status ('pending', 'responded', 'archived')
+     * @param string|null $search Search in name, email, or subject
+     * @return array Array of contact submissions
+     */
+    public function getAllSubmissions(?string $status = null, ?string $search = null): array {
+        $params = [];
+        $sql = "SELECT * FROM contact_submissions WHERE 1=1";
+
+        if ($status) {
+            $sql .= " AND status = :status";
+            $params['status'] = $status;
+        }
+
+        if ($search) {
+            $sql .= " AND (name LIKE :search OR email LIKE :search OR subject LIKE :search)";
+            $params['search'] = "%{$search}%";
+        }
+
+        $sql .= " ORDER BY submitted_at DESC";
+
+        try {
+            $stmt = $this->getDB()->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            error_log("Error getting contact submissions: " . $e->getMessage());
+            return [];
+        }
     }
 
     /**
@@ -61,6 +86,23 @@ class Contact extends Model {
             ]);
         } catch (\PDOException $e) {
             error_log("Error updating submission status: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get a specific contact submission by ID
+     * @param int $id Submission ID
+     * @return array|false The submission data or false if not found
+     */
+    public function getSubmissionById(int $id) {
+        $sql = "SELECT * FROM contact_submissions WHERE id = :id";
+        try {
+            $stmt = $this->getDB()->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            error_log("Error getting submission by ID: " . $e->getMessage());
             return false;
         }
     }
