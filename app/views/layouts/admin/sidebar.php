@@ -52,6 +52,11 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_contacts' ? 'active' : '' ?>">
             <i class="bi bi-envelope me-2"></i>Contact Submissions
         </a>
+
+        <a href="<?= BASE_URL ?>/admin/manage-library-info" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_library_info' ? 'active' : '' ?>">
+            <i class="bi bi-info-circle me-2"></i>Library Information
+        </a>
         
         <a href="<?= BASE_URL ?>/admin/account" 
            class="list-group-item list-group-item-action <?= $currentPage === 'account' ? 'active' : '' ?>">

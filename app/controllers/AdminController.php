@@ -15,6 +15,7 @@ class AdminController extends Controller {
     private $faqModel;
     private $contactModel;
     private $carouselModel;
+    private $libraryInfoModel;
 
     public function __construct() {
         parent::__construct();
@@ -27,6 +28,7 @@ class AdminController extends Controller {
         $this->faqModel = new \App\Models\FAQ();
         $this->contactModel = new \App\Models\Contact();
         $this->carouselModel = new \App\Models\CarouselImage();
+        $this->libraryInfoModel = new \App\Models\LibraryInfo();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -1380,6 +1382,67 @@ class AdminController extends Controller {
         }
 
         header('Location: ' . BASE_URL . '/admin/manage-carousel');
+    }
+
+    /**
+     * Display library information management page
+     */
+    public function manageLibraryInfo() {
+        try {
+            $library_info = $this->libraryInfoModel->getLibraryInfo();
+            
+            $data = [
+                'pageTitle' => 'Manage Library Information - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_library_info',
+                'layout' => 'admin',
+                'library_info' => $library_info,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_library_info', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageLibraryInfo(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the library information.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Update library information
+     */
+    public function updateLibraryInfo() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $data = [
+                'hours' => trim($_POST['hours'] ?? ''),
+                'location' => trim($_POST['location'] ?? ''),
+                'phone' => trim($_POST['phone'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
+                'address' => trim($_POST['address'] ?? '')
+            ];
+
+            // Validate email format
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                throw new \Exception('Invalid email format');
+            }
+
+            if ($this->libraryInfoModel->updateLibraryInfo($data)) {
+                $this->setFlashMessage('success', 'Library information updated successfully.');
+            } else {
+                throw new \Exception('Failed to update library information');
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateLibraryInfo(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'Failed to update library information: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-library-info');
     }
 
     /**
