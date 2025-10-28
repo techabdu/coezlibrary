@@ -14,6 +14,7 @@ class AdminController extends Controller {
     private $serviceModel;
     private $faqModel;
     private $contactModel;
+    private $carouselModel;
 
     public function __construct() {
         parent::__construct();
@@ -25,6 +26,7 @@ class AdminController extends Controller {
         $this->serviceModel = new \App\Models\Service();
         $this->faqModel = new \App\Models\FAQ();
         $this->contactModel = new \App\Models\Contact();
+        $this->carouselModel = new \App\Models\CarouselImage();
         
         // Require authentication for all admin routes except login
         $action = $_GET['url'] ?? '';
@@ -1192,6 +1194,192 @@ class AdminController extends Controller {
             $this->setFlashMessage('error', 'An error occurred while loading the submission details.');
             header('Location: ' . BASE_URL . '/admin/manage-contacts');
         }
+    }
+
+    /**
+     * Display carousel images management page
+     */
+    public function manageCarousel() {
+        try {
+            $images = $this->carouselModel->getAllImages();
+            
+            $data = [
+                'pageTitle' => 'Manage Carousel Images - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'manage_carousel',
+                'layout' => 'admin',
+                'images' => $images,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/manage_carousel', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->manageCarousel(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading the carousel images.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Handle carousel image upload
+     */
+    public function uploadCarouselImage() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            // Validate file upload
+            if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+                throw new \Exception('No image uploaded or upload failed');
+            }
+
+            $file = $_FILES['image'];
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            $maxSize = 100 * 1024 * 1024; // 100MB
+
+            // Validate file type
+            if (!in_array($file['type'], $allowedTypes)) {
+                throw new \Exception('Invalid file type. Only JPG, PNG, and GIF files are allowed.');
+            }
+
+            // Validate file size
+            if ($file['size'] > $maxSize) {
+                throw new \Exception('File is too large. Maximum size is 100MB.');
+            }
+
+            // Create upload directory if it doesn't exist
+            $uploadDir = 'public/images/carousel/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            // Generate unique filename
+            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $filename = 'carousel_' . time() . '_' . uniqid() . '.' . $extension;
+            $targetPath = $uploadDir . $filename;
+
+            // Move uploaded file
+            if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                throw new \Exception('Failed to save uploaded file');
+            }
+
+            // Save to database
+            $data = [
+                'image_path' => '/' . $targetPath,
+                'caption' => $_POST['caption'] ?? '',
+                'display_order' => intval($_POST['display_order'] ?? 0),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            $this->carouselModel->addImage($data);
+            $this->setFlashMessage('success', 'Image uploaded successfully.');
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->uploadCarouselImage(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'Failed to upload image: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-carousel');
+    }
+
+    /**
+     * Handle carousel image update
+     */
+    public function updateCarouselImage() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No image ID provided');
+            }
+
+            $data = [
+                'caption' => $_POST['caption'] ?? '',
+                'display_order' => intval($_POST['display_order'] ?? 0),
+                'is_active' => isset($_POST['is_active']) ? 1 : 0
+            ];
+
+            // Handle new image upload if provided
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $file = $_FILES['image'];
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                $maxSize = 100 * 1024 * 1024; // 100MB
+
+                // Validate file type
+                if (!in_array($file['type'], $allowedTypes)) {
+                    throw new \Exception('Invalid file type. Only JPG, PNG, and GIF files are allowed.');
+                }
+
+                // Validate file size
+                if ($file['size'] > $maxSize) {
+                    throw new \Exception('File is too large. Maximum size is 100MB.');
+                }
+
+                // Generate unique filename
+                $uploadDir = 'public/images/carousel/';
+                $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $filename = 'carousel_' . time() . '_' . uniqid() . '.' . $extension;
+                $targetPath = $uploadDir . $filename;
+
+                // Move uploaded file
+                if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                    throw new \Exception('Failed to save uploaded file');
+                }
+
+                // Delete old image file
+                $oldImage = $this->carouselModel->getImageById($id);
+                if ($oldImage && !empty($oldImage['image_path'])) {
+                    $oldPath = ltrim($oldImage['image_path'], '/');
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+
+                $data['image_path'] = '/' . $targetPath;
+            }
+
+            $this->carouselModel->updateImage($id, $data);
+            $this->setFlashMessage('success', 'Image updated successfully.');
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->updateCarouselImage(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'Failed to update image: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-carousel');
+    }
+
+    /**
+     * Handle carousel image deletion
+     */
+    public function deleteCarouselImage() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $id = $_POST['id'] ?? null;
+            if (!$id) {
+                throw new \Exception('No image ID provided');
+            }
+
+            if ($this->carouselModel->deleteImage($id)) {
+                $this->setFlashMessage('success', 'Image deleted successfully.');
+            } else {
+                throw new \Exception('Failed to delete image');
+            }
+
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->deleteCarouselImage(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'Failed to delete image: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/manage-carousel');
     }
 
     /**

@@ -915,7 +915,7 @@ library-website/
   - Caption (optional)
   - Display order (number)
   - Active checkbox
-- [ ] Validate file type and size (max 2MB)
+- [ ] Validate file type and size (max 100MB)
 - [ ] Save image to `/public/images/carousel/`
 - [ ] Insert record into `carousel_images` table
 - [ ] Test uploading image

@@ -31,8 +31,8 @@
            class="list-group-item list-group-item-action <?= $currentPage === 'manage_policies' ? 'active' : '' ?>">
             <i class="bi bi-shield-check me-2"></i>Manage Policies
         </a>
-        <a href="<?= BASE_URL ?>/admin/carousel" 
-           class="list-group-item list-group-item-action <?= $currentPage === 'carousel' ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>/admin/manage-carousel" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'manage_carousel' ? 'active' : '' ?>">
             <i class="bi bi-images me-2"></i>Carousel Images
         </a>
         <a href="<?= BASE_URL ?>/admin/manage-services" 

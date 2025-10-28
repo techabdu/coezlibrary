@@ -89,7 +89,12 @@ class Router {
         // Contact Management Routes
         'admin/manage-contacts' => ['controller' => 'Admin', 'action' => 'manageContacts'],
         'admin/view-contact' => ['controller' => 'Admin', 'action' => 'viewContact'],
-        'admin/update-contact-status' => ['controller' => 'Admin', 'action' => 'updateContactStatus']
+        'admin/update-contact-status' => ['controller' => 'Admin', 'action' => 'updateContactStatus'],
+        // Carousel Management Routes
+        'admin/manage-carousel' => ['controller' => 'Admin', 'action' => 'manageCarousel'],
+        'admin/upload-carousel-image' => ['controller' => 'Admin', 'action' => 'uploadCarouselImage'],
+        'admin/update-carousel-image' => ['controller' => 'Admin', 'action' => 'updateCarouselImage'],
+        'admin/delete-carousel-image' => ['controller' => 'Admin', 'action' => 'deleteCarouselImage']
     ];
 
     /**
