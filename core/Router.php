@@ -108,6 +108,13 @@ class Router {
             return;
         }
 
+        // Check if it's a POST request to the contact form
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $url[0] === 'contact' && isset($url[1]) && $url[1] === 'submit') {
+            $this->controller = 'ContactController';
+            $this->action = 'submit';
+            return;
+        }
+
         // Build the base path for route matching
         $basePath = '';
         $urlCopy = $url;
