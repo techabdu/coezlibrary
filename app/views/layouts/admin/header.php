@@ -20,9 +20,29 @@
     
     <!-- Admin panel CSS -->
     <link href="<?= BASE_URL ?>/public/css/admin.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/public/css/form-validation.css" rel="stylesheet">
     
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Form Validation Configuration -->
+    <script>
+        const FORM_CONFIG = {
+            passwordMinLength: 8,
+            maxFileSize: 100 * 1024 * 1024, // 100MB
+            allowedImageTypes: ['image/jpeg', 'image/png', 'image/gif'],
+            submitTimeout: 5000, // 5 seconds
+            validationMessages: {
+                required: 'This field is required',
+                email: 'Please enter a valid email address',
+                url: 'Please enter a valid URL (include http:// or https://)',
+                passwordMatch: 'Passwords do not match',
+                passwordLength: 'Password must be at least 8 characters long',
+                fileSize: 'File size must not exceed 100MB',
+                fileType: 'Please upload only JPG, PNG, or GIF files'
+            }
+        };
+    </script>
     
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
