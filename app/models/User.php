@@ -54,4 +54,43 @@ class User extends Model {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result && $result['role'] === 'admin';
     }
+
+    /**
+     * Get user by ID
+     * @param int $userId The user ID to look up
+     * @return array|false User data or false if not found
+     */
+    public function getUserById(int $userId) {
+        $sql = "SELECT * FROM users WHERE id = :id LIMIT 1";
+        $stmt = $this->getDB()->prepare($sql);
+        $stmt->execute(['id' => $userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Update user data
+     * @param int $userId The user ID to update
+     * @param array $data The data to update
+     * @return bool True on success, false on failure
+     */
+    public function updateUser(int $userId, array $data): bool {
+        // Build update query dynamically based on provided data
+        $updates = [];
+        $params = ['id' => $userId];
+
+        foreach ($data as $field => $value) {
+            if (in_array($field, ['username', 'password_hash', 'role'])) {
+                $updates[] = "{$field} = :{$field}";
+                $params[$field] = $value;
+            }
+        }
+
+        if (empty($updates)) {
+            return false;
+        }
+
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $updates) . " WHERE id = :id";
+        $stmt = $this->getDB()->prepare($sql);
+        return $stmt->execute($params);
+    }
 }

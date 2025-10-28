@@ -1483,4 +1483,100 @@ class AdminController extends Controller {
         }
         exit;
     }
+
+    /**
+     * Display account settings page
+     */
+    public function accountSettings() {
+        try {
+            $userId = $_SESSION['user_id'];
+            $user = $this->userModel->getUserById($userId);
+
+            if (!$user) {
+                throw new \Exception('User not found');
+            }
+
+            $data = [
+                'pageTitle' => 'Account Settings - ' . SITE_NAME,
+                'username' => $_SESSION['username'],
+                'currentPage' => 'account_settings',
+                'layout' => 'admin',
+                'user' => $user,
+                'success' => $this->getFlashMessage('success'),
+                'error' => $this->getFlashMessage('error')
+            ];
+
+            $this->render('admin/account_settings', $data);
+        } catch (\Exception $e) {
+            error_log("Error in AdminController->accountSettings(): " . $e->getMessage());
+            $this->setFlashMessage('error', 'An error occurred while loading account settings.');
+            header('Location: ' . BASE_URL . '/admin/dashboard');
+        }
+    }
+
+    /**
+     * Update account settings
+     */
+    public function updateAccountSettings() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Invalid request method');
+            }
+
+            $userId = $_SESSION['user_id'];
+            $currentUser = $this->userModel->getUserById($userId);
+
+            if (!$currentUser) {
+                throw new \Exception('User not found');
+            }
+
+            // Validate current password
+            $currentPassword = $_POST['current_password'] ?? '';
+            if (!$this->userModel->verifyPassword($currentPassword, $currentUser['password_hash'])) {
+                throw new \Exception('Current password is incorrect');
+            }
+
+            $data = ['username' => $currentUser['username']]; // Initialize with current username
+
+            // Handle username update
+            $newUsername = trim($_POST['username'] ?? '');
+            if (!empty($newUsername) && $newUsername !== $currentUser['username']) {
+                // Check if username is already taken
+                if ($this->userModel->getUserByUsername($newUsername)) {
+                    throw new \Exception('Username is already taken');
+                }
+                $data['username'] = $newUsername;
+            }
+
+            // Handle password update
+            $newPassword = $_POST['new_password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+            
+            if (!empty($newPassword)) {
+                if (strlen($newPassword) < 8) {
+                    throw new \Exception('New password must be at least 8 characters long');
+                }
+                if ($newPassword !== $confirmPassword) {
+                    throw new \Exception('New passwords do not match');
+                }
+                $data['password_hash'] = $this->userModel->hashPassword($newPassword);
+            }
+
+            // Update user data
+            if ($this->userModel->updateUser($userId, $data)) {
+                // Update session if username was changed
+                if (isset($data['username']) && $data['username'] !== $_SESSION['username']) {
+                    $_SESSION['username'] = $data['username'];
+                }
+                $this->setFlashMessage('success', 'Account settings updated successfully.');
+            } else {
+                throw new \Exception('Failed to update account settings');
+            }
+
+        } catch (\Exception $e) {
+            $this->setFlashMessage('error', $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/admin/account-settings');
+    }
 }

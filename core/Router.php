@@ -97,7 +97,10 @@ class Router {
         'admin/delete-carousel-image' => ['controller' => 'Admin', 'action' => 'deleteCarouselImage'],
         // Library Information Management Routes
         'admin/manage-library-info' => ['controller' => 'Admin', 'action' => 'manageLibraryInfo'],
-        'admin/update-library-info' => ['controller' => 'Admin', 'action' => 'updateLibraryInfo']
+        'admin/update-library-info' => ['controller' => 'Admin', 'action' => 'updateLibraryInfo'],
+        // Account Settings Routes
+        'admin/account-settings' => ['controller' => 'Admin', 'action' => 'accountSettings'],
+        'admin/update-account-settings' => ['controller' => 'Admin', 'action' => 'updateAccountSettings']
     ];
 
     /**

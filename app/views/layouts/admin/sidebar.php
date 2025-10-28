@@ -58,8 +58,8 @@
             <i class="bi bi-info-circle me-2"></i>Library Information
         </a>
         
-        <a href="<?= BASE_URL ?>/admin/account" 
-           class="list-group-item list-group-item-action <?= $currentPage === 'account' ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>/admin/account-settings" 
+           class="list-group-item list-group-item-action <?= $currentPage === 'account_settings' ? 'active' : '' ?>">
             <i class="bi bi-person-circle me-2"></i>Account Settings
         </a>
     </div>
