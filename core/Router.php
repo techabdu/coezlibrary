@@ -213,17 +213,68 @@ class Router {
      * @param string $message Error message
      * @return void
      */
+    /**
+     * Handle errors by displaying appropriate error page
+     * @param int $code HTTP status code
+     * @param string $message Error message
+     * @return void
+     */
     private function handleError(int $code, string $message): void {
         http_response_code($code);
         
-        if (file_exists(APP_PATH . "/views/errors/{$code}.php")) {
-            require_once APP_PATH . "/views/errors/{$code}.php";
+        $errorFile = APP_PATH . "/views/errors/{$code}.php";
+        
+        // Pass error details to the view if debugging is enabled
+        $error = DISPLAY_ERRORS ? $message : null;
+        
+        // Set default content type to HTML
+        header('Content-Type: text/html; charset=UTF-8');
+        
+        // Handle AJAX requests differently
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => true,
+                'code' => $code,
+                'message' => $this->getErrorMessage($code)
+            ]);
+            return;
+        }
+        
+        // Display error page
+        if (file_exists($errorFile)) {
+            // Buffer output to prevent header issues
+            ob_start();
+            require $errorFile;
+            $content = ob_get_clean();
+            echo $content;
         } else {
+            // Fallback error display
             echo "<h1>Error {$code}</h1>";
             if (DISPLAY_ERRORS) {
                 echo "<p>{$message}</p>";
             }
         }
+    }
+    
+    /**
+     * Get user-friendly error message for status code
+     * @param int $code HTTP status code
+     * @return string Error message
+     */
+    private function getErrorMessage(int $code): string {
+        $messages = [
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            403 => 'Forbidden',
+            404 => 'Page Not Found',
+            405 => 'Method Not Allowed',
+            500 => 'Internal Server Error',
+            503 => 'Service Unavailable'
+        ];
+        
+        return $messages[$code] ?? 'An error occurred';
     }
 
     /**
