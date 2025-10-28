@@ -24,7 +24,7 @@
     <!-- Quick Stats -->
     <div class="row g-4 py-3">
         <!-- Pending Contacts -->
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card stats-card bg-warning text-dark h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -37,44 +37,6 @@
                         </div>
                     </div>
                     <small class="d-block mt-2">Awaiting response</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Digital Resources -->
-        <div class="col-md-3">
-            <div class="card stats-card bg-success text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="card-title mb-2">Digital Resources</h6>
-                            <h2 class="display-6 mb-0"><?= $stats['ebooks'] + $stats['ejournals'] ?></h2>
-                        </div>
-                        <div class="icon-shape bg-white text-success rounded p-2">
-                            <i class="bi bi-journal-text fs-4"></i>
-                        </div>
-                    </div>
-                    <small class="d-block mt-2">
-                        <?= $stats['ebooks'] ?> E-books, <?= $stats['ejournals'] ?> E-journals
-                    </small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Databases -->
-        <div class="col-md-3">
-            <div class="card stats-card bg-info text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="card-title mb-2">Databases</h6>
-                            <h2 class="display-6 mb-0"><?= $stats['databases'] ?></h2>
-                        </div>
-                        <div class="icon-shape bg-white text-info rounded p-2">
-                            <i class="bi bi-server fs-4"></i>
-                        </div>
-                    </div>
-                    <small class="d-block mt-2">Active database links</small>
                 </div>
             </div>
         </div>
