@@ -1,10 +1,13 @@
 <?php
 /**
  * Base Controller Class
- * Handles common controller operations and view rendering
+ * Handles common controller operations, view rendering, and security
  */
 
 namespace Core;
+
+require_once __DIR__ . '/Security.php';
+use Core\Security;
 
 class Controller {
     /**
@@ -24,21 +27,17 @@ class Controller {
      * Initializes session if not already started
      */
     public function __construct() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start([
-                'name' => SESSION_NAME,
-                'cookie_lifetime' => SESSION_LIFETIME,
-                'cookie_path' => SESSION_PATH,
-                'cookie_secure' => SESSION_SECURE,
-                'cookie_httponly' => SESSION_HTTPONLY
-            ]);
-        }
+        // Initialize secure session
+        Security::secureSession();
 
         // Set current user if authenticated
         if (isset($_SESSION['user_id'])) {
             // TODO: Load user data from database
             $this->user = null;
         }
+
+        // Add CSRF token to all views by default
+        $this->viewData['csrf_token'] = Security::generateCSRFToken();
     }
 
     /**

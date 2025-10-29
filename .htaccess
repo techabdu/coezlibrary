@@ -1,45 +1,107 @@
-# Enable URL rewriting
+# Disable directory listing and enable URL rewriting
+Options -Indexes +FollowSymLinks
 RewriteEngine On
+RewriteBase /coezlibrary/
 
-# If the request is not for a real directory
-RewriteCond %{REQUEST_FILENAME} !-d
-# If the request is not for a real file
-RewriteCond %{REQUEST_FILENAME} !-f
-# If the request is not for a symbolic link
-RewriteCond %{REQUEST_FILENAME} !-l
-
-# Rewrite all requests to index.php?url=REQUEST
-RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
-
-# Protect sensitive files
-<FilesMatch "^\.">
-    Order allow,deny
+# Block access to sensitive files and directories
+<FilesMatch "^(\.htaccess|\.htpasswd|\.git|\.env|config\.php|database\.php)$">
+    Order Allow,Deny
     Deny from all
 </FilesMatch>
 
-# Disable directory listing
-Options -Indexes
+# Block access to hidden files and directories
+RedirectMatch 404 /\..*$
 
-# Set default character set
-AddDefaultCharset UTF-8
+# Prevent access to backup/config files
+<FilesMatch "\.(bak|config|dist|fla|inc|ini|log|psd|sh|sql|json|lock|swp)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
 
-# Enable CORS for API if needed
-#<IfModule mod_headers.c>
-#    Header set Access-Control-Allow-Origin "*"
-#</IfModule>
+# Allow direct access to public assets
+RewriteCond %{REQUEST_URI} !^/coezlibrary/public/
 
-# PHP configuration
+# If the request is not for an existing file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# PHP configuration with secure defaults
 <IfModule mod_php.c>
+    php_flag display_errors off
     php_value upload_max_filesize 10M
     php_value post_max_size 10M
     php_value max_execution_time 300
     php_value max_input_time 300
+    php_flag session.cookie_httponly on
+    php_flag session.use_strict_mode on
+    php_flag session.use_only_cookies on
+    php_flag session.cookie_secure on
 </IfModule>
 
 # Security headers
 <IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
+    # Prevent clickjacking
     Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Enable XSS protection
     Header set X-XSS-Protection "1; mode=block"
+    
+    # Prevent MIME-type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Enforce HTTPS
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Restrict referrer information
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://code.jquery.com https://cdn.datatables.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.datatables.net; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net https://cdn.datatables.net"
 </IfModule>
+
+# Enable GZIP compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Set caching headers
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # CSS, JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    
+    # Others
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType application/xhtml+xml "access plus 0 seconds"
+</IfModule>
+
+# Only allow GET, POST, HEAD, OPTIONS methods
+<LimitExcept GET POST HEAD OPTIONS>
+    Deny from all
+</LimitExcept>
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Disable server signature
+ServerSignature Off

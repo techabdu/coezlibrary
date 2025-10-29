@@ -118,14 +118,16 @@
 </div>
 
 <!-- Edit FAQ Modal -->
-<div class="modal fade" id="editFAQModal" tabindex="-1" aria-labelledby="editFAQModalLabel" aria-hidden="true">
+<div class="modal fade" id="editFAQModal" tabindex="-1" aria-labelledby="editFAQModalLabel" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="editFAQForm" action="<?= BASE_URL ?>/admin/update-faq" method="POST">
                 <input type="hidden" name="id" id="edit_id">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editFAQModalLabel">Edit FAQ</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="visually-hidden">Close</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -181,17 +183,19 @@
     </div>
 </div>
 
-<!-- Initialize DataTable -->
+<!-- Define BASE_URL for JavaScript -->
 <script>
-$(document).ready(function() {
-    try {
-        // Check if DataTable function exists
-        if (typeof $.fn.DataTable === 'undefined') {
-            console.error('DataTables is not loaded. Please check your script includes.');
-            return;
-        }
+    const BASE_URL = '<?= BASE_URL ?>';
+</script>
 
-        // Initialize DataTable
+<!-- Include footer with jQuery, Bootstrap, and DataTables -->
+<?php include APP_PATH . '/views/layouts/admin/footer.php'; ?>
+
+<!-- Page specific scripts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DataTable
+    if ($.fn.DataTable) {
         $('#faqsTable').DataTable({
             responsive: true,
             order: [[3, 'asc'], [0, 'asc']], // Sort by display order, then category
@@ -203,43 +207,31 @@ $(document).ready(function() {
                 zeroRecords: 'No matching FAQs found'
             }
         });
-    } catch (error) {
-        console.error('Error initializing DataTable:', error);
     }
 
-    // Handle edit modal
+    // Handle edit modal population
     $('#editFAQModal').on('show.bs.modal', function (event) {
         try {
-            var button = $(event.relatedTarget);
-            var faqJson = button.data('faq');
-            var faq = (typeof faqJson === 'string') ? JSON.parse(faqJson) : faqJson;
+            const button = event.relatedTarget;
+            const faqData = button.getAttribute('data-faq');
+            const faq = JSON.parse(faqData);
             
             if (!faq) {
                 console.error('FAQ data is missing');
                 return;
             }
 
-            $('#edit_id').val(faq.id);
-            $('#edit_question').val(faq.question || '');
-            $('#edit_answer').val(faq.answer || '');
-            $('#edit_category').val(faq.category || '');
-            $('#edit_display_order').val(faq.display_order || 0);
+            document.getElementById('edit_id').value = faq.id;
+            document.getElementById('edit_question').value = faq.question || '';
+            document.getElementById('edit_answer').value = faq.answer || '';
+            document.getElementById('edit_category').value = faq.category || '';
+            document.getElementById('edit_display_order').value = faq.display_order || 0;
         } catch (e) {
             console.error('Error populating edit form:', e);
         }
     });
-});
 
-// Handle delete confirmation
-function confirmDelete(faqId) {
-    $('#delete_faq_id').val(faqId);
-    $('#deleteFAQModal').modal('show');
-}
-</script>
-
-<!-- Display success/error messages -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+    // Handle alerts
     const alertsContainer = document.getElementById('alertsContainer');
     <?php if (isset($success)): ?>
         alertsContainer.innerHTML += `
@@ -258,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     <?php endif; ?>
 
-    // Auto-dismiss alerts after 5 seconds
+    // Auto-dismiss alerts
     setTimeout(function() {
         const alerts = document.querySelectorAll('.alert');
         alerts.forEach(function(alert) {
@@ -267,4 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 5000);
 });
+
+// Handle delete confirmation
+function confirmDelete(faqId) {
+    document.getElementById('delete_faq_id').value = faqId;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteFAQModal'));
+    deleteModal.show();
+}
+</script>
 </script>

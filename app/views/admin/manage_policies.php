@@ -219,23 +219,5 @@
 <!-- Load Scripts -->
 <?php include APP_PATH . '/views/layouts/admin/footer.php'; ?>
 
-<!-- Include DataTables -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
-<!-- Auto-dismiss alerts script -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Auto-dismiss alerts after 5 seconds
-    setTimeout(function() {
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            const bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        });
-    }, 5000);
-});
-</script>
-
 <!-- Include manage_policies.js -->
 <script src="<?= BASE_URL ?>/public/js/manage_policies.js?v=<?= time() ?>"></script>

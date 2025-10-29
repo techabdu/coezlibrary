@@ -77,37 +77,48 @@
     </div>
 </div>
 
-<!-- Initialize DataTables -->
+<!-- Initialize DataTables and event handlers -->
 <script>
+    // Wait for jQuery and DataTables to load
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize DataTable
-        const table = new DataTable('#databasesTable', {
-            order: [[0, 'asc']], // Sort by name by default
-            pageLength: 10,
-            responsive: true
-        });
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery is required but not loaded');
+            return;
+        }
 
-        // Delete database functionality is handled in manage_databases.js
+        if (!$.fn.DataTable) {
+            console.error('DataTables is required but not loaded');
+            return;
+        }
 
-        // Handle edit button clicks
-        document.querySelectorAll('.edit-database').forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                const id = this.getAttribute('data-id');
-                const name = row.cells[0].textContent;
-                const category = row.cells[1].textContent;
-                const url = row.cells[2].querySelector('a').href;
-                const description = row.cells[3].textContent;
+        // Initialize DataTable with jQuery
+        $(document).ready(function() {
+            $('#databasesTable').DataTable({
+                order: [[0, 'asc']], // Sort by name by default
+                pageLength: 10,
+                responsive: true
+            });
+
+            // Delete database functionality is handled in manage_databases.js
+
+            // Handle edit button clicks
+            $('.edit-database').on('click', function() {
+                const $row = $(this).closest('tr');
+                const id = $(this).data('id');
+                const name = $row.find('td').eq(0).text();
+                const category = $row.find('td').eq(1).text();
+                const url = $row.find('td').eq(2).find('a').attr('href');
+                const description = $row.find('td').eq(3).text();
 
                 // Populate the edit modal
-                document.getElementById('edit_id').value = id;
-                document.getElementById('edit_name').value = name;
-                document.getElementById('edit_category').value = category === 'N/A' ? '' : category;
-                document.getElementById('edit_url').value = url;
-                document.getElementById('edit_description').value = description;
+                $('#edit_id').val(id);
+                $('#edit_name').val(name);
+                $('#edit_category').val(category === 'N/A' ? '' : category);
+                $('#edit_url').val(url);
+                $('#edit_description').val(description);
 
                 // Show the modal
-                new bootstrap.Modal(document.getElementById('editDatabaseModal')).show();
+                new bootstrap.Modal($('#editDatabaseModal')[0]).show();
             });
         });
     });
@@ -211,13 +222,6 @@
     </div>
 </div>
 
-<!-- Load Scripts after footer -->
-<?php include APP_PATH . '/views/layouts/admin/footer.php'; ?>
-
-<!-- Include DataTables -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
 <!-- Define BASE_URL for JavaScript -->
 <script>
     const BASE_URL = '<?= BASE_URL ?>';
@@ -225,3 +229,6 @@
 
 <!-- Include manage_databases.js -->
 <script src="<?= BASE_URL ?>/public/js/manage_databases.js?v=<?= time() ?>"></script>
+
+<!-- Load footer with scripts -->
+<?php include APP_PATH . '/views/layouts/admin/footer.php'; ?>

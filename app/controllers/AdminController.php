@@ -549,16 +549,19 @@ class AdminController extends Controller {
      * Update an existing policy
      */
     public function updatePolicy() {
+        // Clear any existing output buffers
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                http_response_code(405);
-                header('Location: ' . BASE_URL . '/admin/manage-policies');
-                return;
+                throw new \Exception('Invalid request method', 405);
             }
 
             $id = $_POST['id'] ?? null;
             if (!$id) {
-                throw new \Exception('No policy ID provided');
+                throw new \Exception('No policy ID provided', 400);
             }
 
             $data = [
@@ -569,26 +572,123 @@ class AdminController extends Controller {
                 'is_active' => isset($_POST['is_active']) ? 1 : 0
             ];
 
+            // Log the update attempt
+            error_log("Attempting to update policy ID {$id} with data: " . print_r($data, true));
+
+            // Validate required fields
+            if (empty($data['title'])) {
+                throw new \InvalidArgumentException('Title is required', 400);
+            }
+            if (empty($data['content'])) {
+                throw new \InvalidArgumentException('Content is required', 400);
+            }
+            if (empty($data['category'])) {
+                throw new \InvalidArgumentException('Category is required', 400);
+            }
+
             $policyModel = new \App\Models\Policy();
-            $policyModel->update($id, $data);
-            $this->setFlashMessage('success', 'Policy updated successfully.');
+            
+            // Check if policy exists
+            $existingPolicy = $policyModel->getPolicyById($id);
+            if (!$existingPolicy) {
+                error_log("Policy with ID {$id} not found");
+                throw new \Exception('Policy not found', 404);
+            }
+
+            // Attempt the update
+            $result = $policyModel->update($id, $data);
+            
+            if ($result === false) {
+                error_log("Failed to update policy ID {$id}");
+                throw new \Exception('Failed to update policy', 500);
+            }
+            
+            error_log("Successfully updated policy ID {$id}");
+            
+            $response = [
+                'success' => true,
+                'message' => 'Policy updated successfully',
+                'policy' => [
+                    'id' => $id,
+                    'title' => $data['title'],
+                    'category' => $data['category'],
+                    'display_order' => $data['display_order'],
+                    'is_active' => $data['is_active']
+                ]
+            ];
+
+            if ($this->isAjaxRequest()) {
+                http_response_code(200);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($response, JSON_THROW_ON_ERROR);
+            } else {
+                $this->setFlashMessage('success', $response['message']);
+                header('Location: ' . BASE_URL . '/admin/manage-policies');
+            }
+            exit;
 
         } catch (\InvalidArgumentException $e) {
-            $this->setFlashMessage('error', $e->getMessage());
+            error_log("Validation error in AdminController->updatePolicy(): " . $e->getMessage());
+            $code = $e->getCode() ?: 400;
+            $this->handleError($e->getMessage(), $code);
+        } catch (\PDOException $e) {
+            error_log("Database error in AdminController->updatePolicy(): " . $e->getMessage());
+            error_log("SQL State: " . $e->errorInfo[0]);
+            error_log("Driver Error Code: " . $e->errorInfo[1]);
+            error_log("Driver Error Message: " . $e->errorInfo[2]);
+            $this->handleError('Database error occurred while updating policy', 500);
         } catch (\Exception $e) {
             error_log("Error in AdminController->updatePolicy(): " . $e->getMessage());
-            $this->setFlashMessage('error', 'An error occurred while updating the policy.');
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $code = $e->getCode() ?: 500;
+            $this->handleError($e->getMessage(), $code);
         }
+    }
 
-        header('Location: ' . BASE_URL . '/admin/manage-policies');
+    /**
+     * Handle error responses consistently
+     */
+    private function handleError(string $message, int $code = 500) {
+        if ($this->isAjaxRequest()) {
+            http_response_code($code);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'success' => false,
+                'error' => $message,
+                'code' => $code
+            ], JSON_THROW_ON_ERROR);
+        } else {
+            $this->setFlashMessage('error', $message);
+            header('Location: ' . BASE_URL . '/admin/manage-policies');
+        }
+        exit;
+    }
+
+    /**
+     * Check if the current request is an AJAX request
+     */
+    private function isAjaxRequest(): bool {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+               strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     /**
      * Delete a policy
      */
     public function deletePolicy() {
+        // Clear any existing output buffers
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                if ($this->isAjaxRequest()) {
+                    http_response_code(405);
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode(['error' => 'Invalid request method'], JSON_THROW_ON_ERROR);
+                    exit;
+                }
                 throw new \Exception('Invalid request method');
             }
 
@@ -597,23 +697,40 @@ class AdminController extends Controller {
                 throw new \Exception('No policy ID provided');
             }
 
-            // Check if policy exists
+            // Delete the policy - no need to check existence since Model class handles that
             $policyModel = new \App\Models\Policy();
-            $policy = $policyModel->getPolicyById($id);
-            if (!$policy) {
-                throw new \Exception('Policy not found');
+            $policyModel->delete($id);
+
+            if ($this->isAjaxRequest()) {
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode([
+                    'success' => true, 
+                    'message' => 'Policy deleted successfully'
+                ], JSON_THROW_ON_ERROR);
+                exit;
             }
 
-            // Delete the policy
-            $policyModel->delete($id);
             $this->setFlashMessage('success', 'Policy deleted successfully.');
+            header('Location: ' . BASE_URL . '/admin/manage-policies');
+            exit;
 
         } catch (\Exception $e) {
             error_log("Error in AdminController->deletePolicy(): " . $e->getMessage());
+            
+            if ($this->isAjaxRequest()) {
+                http_response_code(500);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode([
+                    'error' => $e->getMessage(),
+                    'details' => 'An error occurred while deleting the policy.'
+                ], JSON_THROW_ON_ERROR);
+                exit;
+            }
+            
             $this->setFlashMessage('error', 'An error occurred while deleting the policy: ' . $e->getMessage());
+            header('Location: ' . BASE_URL . '/admin/manage-policies');
+            exit;
         }
-
-        header('Location: ' . BASE_URL . '/admin/manage-policies');
     }
 
     /**
@@ -678,16 +795,19 @@ class AdminController extends Controller {
      * Update an existing service
      */
     public function updateService() {
+        // Clear any existing output buffers
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                http_response_code(405);
-                header('Location: ' . BASE_URL . '/admin/manage-services');
-                return;
+                throw new \Exception('Invalid request method', 405);
             }
 
             $id = $_POST['id'] ?? null;
             if (!$id) {
-                throw new \Exception('No service ID provided');
+                throw new \Exception('No service ID provided', 400);
             }
 
             $data = [
@@ -699,17 +819,72 @@ class AdminController extends Controller {
                 'is_active' => isset($_POST['is_active']) ? 1 : 0
             ];
 
-            $this->serviceModel->updateService($id, $data);
-            $this->setFlashMessage('success', 'Service updated successfully.');
+            // Log the update attempt
+            error_log("Attempting to update service ID {$id} with data: " . print_r($data, true));
+
+            // Validate required fields
+            if (empty($data['title'])) {
+                throw new \InvalidArgumentException('Title is required', 400);
+            }
+            if (empty($data['description'])) {
+                throw new \InvalidArgumentException('Description is required', 400);
+            }
+
+            // Check if service exists
+            $existingService = $this->serviceModel->getServiceById($id);
+            if (!$existingService) {
+                error_log("Service with ID {$id} not found");
+                throw new \Exception('Service not found', 404);
+            }
+
+            // Attempt the update
+            $result = $this->serviceModel->updateService($id, $data);
+            
+            if (!$result) {
+                error_log("Failed to update service ID {$id}");
+                throw new \Exception('Failed to update service', 500);
+            }
+            
+            error_log("Successfully updated service ID {$id}");
+            
+            $response = [
+                'success' => true,
+                'message' => 'Service updated successfully',
+                'service' => [
+                    'id' => $id,
+                    'title' => $data['title'],
+                    'category' => $data['category'],
+                    'display_order' => $data['display_order'],
+                    'is_active' => $data['is_active']
+                ]
+            ];
+
+            if ($this->isAjaxRequest()) {
+                http_response_code(200);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($response, JSON_THROW_ON_ERROR);
+            } else {
+                $this->setFlashMessage('success', $response['message']);
+                header('Location: ' . BASE_URL . '/admin/manage-services');
+            }
+            exit;
 
         } catch (\InvalidArgumentException $e) {
-            $this->setFlashMessage('error', $e->getMessage());
+            error_log("Validation error in AdminController->updateService(): " . $e->getMessage());
+            $code = $e->getCode() ?: 400;
+            $this->handleError($e->getMessage(), $code);
+        } catch (\PDOException $e) {
+            error_log("Database error in AdminController->updateService(): " . $e->getMessage());
+            error_log("SQL State: " . $e->errorInfo[0]);
+            error_log("Driver Error Code: " . $e->errorInfo[1]);
+            error_log("Driver Error Message: " . $e->errorInfo[2]);
+            $this->handleError('Database error occurred while updating service', 500);
         } catch (\Exception $e) {
             error_log("Error in AdminController->updateService(): " . $e->getMessage());
-            $this->setFlashMessage('error', 'An error occurred while updating the service.');
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $code = $e->getCode() ?: 500;
+            $this->handleError($e->getMessage(), $code);
         }
-
-        header('Location: ' . BASE_URL . '/admin/manage-services');
     }
 
     /**

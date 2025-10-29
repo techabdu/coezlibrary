@@ -101,15 +101,19 @@ $categories = [
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-primary btn-sm edit-service-btn" 
+                                            <button type="button" 
+                                                    class="btn btn-primary btn-sm edit-service-btn" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#editServiceModal" 
-                                                    data-service='<?= htmlspecialchars(json_encode($service), ENT_QUOTES, 'UTF-8') ?>'>
-                                                <i class="bi bi-pencil"></i>
+                                                    data-service="<?= htmlspecialchars(json_encode($service), ENT_QUOTES, 'UTF-8') ?>"
+                                                    aria-label="Edit service">
+                                                <i class="bi bi-pencil" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" class="btn btn-danger btn-sm" 
-                                                    onclick="confirmDelete(<?= $service['id'] ?>)">
-                                                <i class="bi bi-trash"></i>
+                                            <button type="button" 
+                                                    class="btn btn-danger btn-sm" 
+                                                    onclick="confirmDelete(<?= $service['id'] ?>)"
+                                                    aria-label="Delete service">
+                                                <i class="bi bi-trash" aria-hidden="true"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -179,8 +183,8 @@ $categories = [
 </div>
 
 <!-- Edit Service Modal -->
-<div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="editServiceModal" tabindex="-1" role="dialog" aria-labelledby="editServiceModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form id="editServiceForm" action="<?= BASE_URL ?>/admin/update-service" method="POST">
                 <input type="hidden" name="id" id="edit_id">
@@ -255,55 +259,32 @@ $categories = [
     </div>
 </div>
 
+<!-- Load Service Management JavaScript -->
+<script src="<?= BASE_URL ?>/public/js/manage_services.js"></script>
+
 <!-- Initialize DataTable -->
 <script>
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Check if DataTable function exists
-        if (typeof $.fn.DataTable === 'undefined') {
-            console.error('DataTables is not loaded. Please check your script includes.');
-            return;
-        }
-
         // Initialize DataTable
-        $('#servicesTable').DataTable({
-            responsive: true,
-            order: [[4, 'asc']], // Sort by display order by default
-            columnDefs: [
-                { orderable: false, targets: [3, 6] } // Disable sorting for icon and actions columns
-            ],
-            language: {
-                emptyTable: 'No services available',
-                zeroRecords: 'No matching services found'
-            }
-        });
+        if (typeof $.fn.DataTable !== 'undefined') {
+            $('#servicesTable').DataTable({
+                responsive: true,
+                order: [[4, 'asc']], // Sort by display order by default
+                columnDefs: [
+                    { orderable: false, targets: [3, 6] } // Disable sorting for icon and actions columns
+                ],
+                language: {
+                    emptyTable: 'No services available',
+                    zeroRecords: 'No matching services found'
+                }
+            });
+        } else {
+            console.error('DataTables is not loaded. Please check your script includes.');
+        }
     } catch (error) {
         console.error('Error initializing DataTable:', error);
     }
-
-    // Handle edit modal
-    $('#editServiceModal').on('show.bs.modal', function (event) {
-        try {
-            var button = $(event.relatedTarget);
-            var serviceJson = button.data('service');
-            var service = (typeof serviceJson === 'string') ? JSON.parse(serviceJson) : serviceJson;
-            
-            if (!service) {
-                console.error('Service data is missing');
-                return;
-            }
-
-            $('#edit_id').val(service.id);
-            $('#edit_title').val(service.title || '');
-            $('#edit_category').val(service.category || '');
-            $('#edit_description').val(service.description || '');
-            $('#edit_icon_class').val(service.icon_class || '');
-            $('#edit_display_order').val(service.display_order || 0);
-            $('#edit_is_active').prop('checked', service.is_active == 1);
-        } catch (e) {
-            console.error('Error populating edit form:', e);
-        }
-    });
 });
 
 // Handle delete confirmation
