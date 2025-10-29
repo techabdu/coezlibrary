@@ -1,0 +1,182 @@
+/* Responsive improvements for mobile devices */
+
+/* General responsive adjustments */
+@media (max-width: 576px) {
+    .container {
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+    
+    /* Improve button spacing on mobile */
+    .btn {
+        padding: 0.625rem 1rem;
+        font-size: 1rem;
+        margin: 0.25rem 0;
+    }
+    
+    /* Stack buttons vertically on mobile when in groups */
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        width: 100%;
+        margin: 0.25rem 0;
+    }
+}
+
+/* Table responsiveness */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    box-shadow: inset -5px 0 10px -5px rgba(0,0,0,0.1);
+}
+
+/* Card improvements for mobile */
+@media (max-width: 576px) {
+    .card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .card-body {
+        padding: var(--spacing-md);
+    }
+    
+    .card-title {
+        font-size: 1.25rem;
+    }
+    
+    /* Stack card actions vertically */
+    .card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* Form improvements for mobile */
+@media (max-width: 576px) {
+    .form-control {
+        font-size: 16px; /* Prevent iOS zoom on focus */
+    }
+    
+    .form-label {
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Improve form group spacing */
+    .form-group, .mb-3 {
+        margin-bottom: 1rem;
+    }
+    
+    /* Full-width form elements */
+    .input-group {
+        width: 100%;
+    }
+}
+
+/* Modal improvements for mobile */
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .modal-header {
+        padding: 0.75rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        padding: 0.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+}
+
+/* Grid improvements for mobile */
+@media (max-width: 576px) {
+    .row {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+    
+    [class*="col-"] {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* Navigation improvements */
+@media (max-width: 576px) {
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .nav-tabs .nav-link {
+        white-space: nowrap;
+    }
+}
+
+/* Utility adjustments for mobile */
+@media (max-width: 576px) {
+    .d-sm-stack {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .w-sm-100 {
+        width: 100% !important;
+    }
+    
+    .text-sm-center {
+        text-align: center !important;
+    }
+    
+    .m-sm-0 {
+        margin: 0 !important;
+    }
+    
+    .p-sm-2 {
+        padding: 0.5rem !important;
+    }
+}
+
+/* Table cell improvements for mobile */
+@media (max-width: 576px) {
+    .table td, .table th {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Optional: Make specific columns more compact */
+    .table td:last-child, .table th:last-child {
+        padding-right: 0.5rem;
+    }
+}
+
+/* Dashboard card improvements */
+@media (max-width: 576px) {
+    .dashboard-card {
+        margin-bottom: 1rem;
+    }
+    
+    .dashboard-stats {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard-label {
+        font-size: 0.875rem;
+    }
+}

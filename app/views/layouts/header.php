@@ -2,8 +2,9 @@
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="description" content="<?= isset($metaDescription) ? $metaDescription : SITE_DESCRIPTION ?>">
+    <meta name="theme-color" content="#006B3F">
     
     <title><?= isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME ?></title>
     
@@ -22,6 +23,7 @@
     <link href="<?= BASE_URL ?>/public/css/utilities.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/public/css/navigation.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/public/css/bootstrap-overrides.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/public/css/responsive.css" rel="stylesheet">
     
     <!-- Additional CSS -->
     <?php if (isset($extraCss)): ?>

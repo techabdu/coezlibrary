@@ -40,7 +40,8 @@
                 Announcements List
             </div>
             <div class="card-body">
-                <table id="announcementsTable" class="table table-bordered table-striped">
+                <div class="table-responsive-wrapper">
+                    <table id="announcementsTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -76,6 +77,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>
