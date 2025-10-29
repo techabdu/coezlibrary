@@ -42,6 +42,8 @@ class Router {
      * @var array
      */
     private $customRoutes = [
+        'announcements' => ['controller' => 'Announcements', 'action' => 'index'],
+        'announcements/view' => ['controller' => 'Announcements', 'action' => 'view'],
         'about/library' => ['controller' => 'Page', 'action' => 'library'],
         'about/librarian' => ['controller' => 'Page', 'action' => 'librarian'],
         'about/staff' => ['controller' => 'Page', 'action' => 'staff'],

@@ -286,7 +286,9 @@
                                     ) ?>
                                 </p>
                                 <a href="<?= BASE_URL ?>/announcements/view/<?= $announcement['id'] ?>" 
-                                   class="btn btn-link text-primary p-0 stretched-link">
+                                   class="btn btn-link text-primary p-0 stretched-link" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#announcementModal-<?= $announcement['id'] ?>">
                                     Read More <i class="bi bi-arrow-right ms-1"></i>
                                 </a>
                             </div>
@@ -617,3 +619,31 @@
     }
 }
 </style>
+
+<!-- Announcement Modals -->
+<?php foreach ($announcements as $announcement): ?>
+    <div class="modal fade" id="announcementModal-<?= $announcement['id'] ?>" tabindex="-1" aria-labelledby="announcementModalLabel-<?= $announcement['id'] ?>" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="announcementModalLabel-<?= $announcement['id'] ?>">
+                        <?= htmlspecialchars($announcement['title']) ?>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="announcement-date mb-3">
+                        <i class="bi bi-calendar3 me-2"></i>
+                        <?= date('F j, Y', strtotime($announcement['date_posted'])) ?>
+                    </div>
+                    <div class="announcement-content">
+                        <?= nl2br(htmlspecialchars($announcement['content'])) ?>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>

@@ -59,4 +59,44 @@ class HomeController extends Controller {
             ]);
         }
     }
+
+    /**
+     * View a single announcement
+     * @param int $id Announcement ID
+     */
+    public function viewAnnouncement($id = null) {
+        try {
+            if (!$id) {
+                throw new Exception('Announcement ID not provided');
+            }
+
+            // Get the announcement
+            $announcement = $this->announcementModel->getById($id);
+            
+            if (!$announcement || !$announcement['is_active']) {
+                $this->render('errors/404', [
+                    'pageTitle' => 'Not Found - ' . SITE_NAME,
+                    'error' => 'Announcement not found.'
+                ]);
+                return;
+            }
+
+            // Prepare data for the view
+            $data = [
+                'pageTitle' => $announcement['title'] . ' - ' . SITE_NAME,
+                'metaDescription' => substr(strip_tags($announcement['content']), 0, 160),
+                'announcement' => $announcement
+            ];
+
+            // Load the view
+            $this->render('home/announcement', $data);
+            
+        } catch (Exception $e) {
+            error_log("Error in HomeController->viewAnnouncement(): " . $e->getMessage());
+            $this->render('errors/500', [
+                'pageTitle' => 'Error - ' . SITE_NAME,
+                'error' => 'An error occurred while loading the announcement.'
+            ]);
+        }
+    }
 }
