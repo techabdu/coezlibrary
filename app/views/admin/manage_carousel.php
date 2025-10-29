@@ -27,9 +27,9 @@
                 <?php foreach ($images as $image): ?>
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100">
-                            <img src="<?= htmlspecialchars($image['image_path']) ?>" 
-                                 class="card-img-top carousel-preview" 
-                                 alt="Carousel Image">
+                       <img src="<?= rtrim(BASE_URL, '/') . htmlspecialchars($image['image_path']) ?>" 
+                            class="card-img-top carousel-preview" 
+                            alt="Carousel Image">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h5 class="card-title text-truncate" title="<?= htmlspecialchars($image['caption']) ?>">

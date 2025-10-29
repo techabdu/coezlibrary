@@ -25,18 +25,14 @@
             <?php if (empty($carouselImages)): ?>
                 <!-- Default slide when no images are available -->
                 <div class="carousel-item active">
-                    <img src="<?= BASE_URL ?>/public/images/carousel/default-library.jpg" 
-                         class="d-block w-100" 
-                         alt="Welcome to <?= SITE_NAME ?>">
-                    <div class="carousel-caption">
-                        <h2>Welcome to <?= SITE_NAME ?></h2>
-                        <p>Your gateway to knowledge and academic resources</p>
-                    </div>
+                    <img src="<?= rtrim(BASE_URL, '/') . htmlspecialchars($image['image_path']) ?>" 
+                        class="d-block w-100" 
+                        alt="<?= htmlspecialchars($image['caption']) ?>">
                 </div>
             <?php else: ?>
                 <?php foreach ($carouselImages as $index => $image): ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <img src="<?= BASE_URL ?>/<?= htmlspecialchars($image['image_path']) ?>" 
+                        <img src="<?= BASE_URL . htmlspecialchars($image['image_path']) ?>" 
                              class="d-block w-100" 
                              alt="<?= htmlspecialchars($image['caption']) ?>">
                         <?php if ($image['caption']): ?>
@@ -63,6 +59,7 @@
 
 <!-- Library Information Section -->
 <section class="library-info py-5 bg-light">
+
     <div class="container">
         <h2 class="text-center mb-4">Library Information</h2>
         <div class="row g-4">
